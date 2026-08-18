@@ -75,7 +75,7 @@
     const wrap = document.createElement("div");
     wrap.className = "vm-download-app-wrap";
     wrap.innerHTML = `
-      <a class="vm-download-app-btn" href="https://app.vmradio.fr/" aria-label="Télécharger l'application VM RADIO">
+      <a class="vm-download-app-btn" href="https://app.vmradio.fr/telecharger.html" aria-label="Télécharger l'application VM RADIO">
         <span class="vm-download-app-icon" aria-hidden="true">▦</span>
         <span>Télécharger l’application VM RADIO</span>
       </a>
@@ -161,13 +161,11 @@
     const n = data.next;
     if (!c) return;
 
-    // CARTE EN DIRECT
     text("[data-current-title]", c.title);
     text("[data-current-artist]", c.artist);
     text("[data-current-time]", clock(c.time));
     image("[data-current-cover]", c.cover);
 
-    // CARTE À SUIVRE
     if (n) {
       text("[data-next-title]", n.title);
       text("[data-next-artist]", n.artist);
@@ -175,13 +173,11 @@
       image("[data-next-cover]", n.cover);
     }
 
-    // CARTES À LA UNE / EN DIRECT
     text("[data-news-current]", c.title);
     text("[data-news-current-artist]", c.artist);
     text("[data-news-current-time]", clock(c.time));
     image("[data-news-current-cover]", c.cover);
 
-    // CARTES À LA UNE / À SUIVRE
     if (n) {
       text("[data-news-next]", n.title);
       text("[data-news-next-artist]", n.artist);
@@ -189,7 +185,6 @@
       image("[data-news-next-cover]", n.cover);
     }
 
-    // DERNIER TITRE TERMINÉ : vient directement de l'historique RadioKing.
     const last = data.history.find(x => x.id !== c.id && x.type === "music") || null;
     if (last) {
       text("[data-news-last]", last.title);
@@ -198,7 +193,6 @@
       image("[data-news-last-cover]", last.cover);
     }
 
-    // MODULE "TITRES PRÉCÉDENTS" DE L'ACCUEIL.
     const previous = document.querySelector("[data-previous]");
     if (previous && Array.isArray(data.history)) {
       const tracks = data.history
@@ -231,7 +225,6 @@
 
   async function update(){
     try {
-      // Les 3 sources sont indépendantes : une panne de "next" ne casse pas "current".
       const [curRaw, nextRaw, historyRaw] = await Promise.allSettled([
         json(ENDPOINTS.current),
         json(ENDPOINTS.next),
@@ -251,9 +244,7 @@
         history = arr.map(normalise).filter(Boolean);
       }
 
-      // Si le endpoint historique renvoie un titre publicitaire, on l'ignore.
       history = history.filter(x => x.type === "music");
-
       render({ current, next, history, updated: Date.now() });
     } catch (e) {
       console.warn("VM RADIO flux:", e);
