@@ -65,7 +65,98 @@
     });
   }
 
+  function ensureDownloadButton(){
+    if (document.querySelector(".vm-download-app-wrap")) return;
+
+    const nav = document.querySelector(".page > .nav");
+    const programTitle = document.querySelector(".page > .program-title");
+    if (!nav || !programTitle) return;
+
+    const wrap = document.createElement("div");
+    wrap.className = "vm-download-app-wrap";
+    wrap.innerHTML = `
+      <a class="vm-download-app-btn" href="https://app.vmradio.fr/" aria-label="Télécharger l'application VM RADIO">
+        <span class="vm-download-app-icon" aria-hidden="true">▦</span>
+        <span>Télécharger l’application VM RADIO</span>
+      </a>
+      <div class="vm-download-app-subtitle">Accéder au système officiel de téléchargement de l’application VM RADIO.</div>
+    `;
+
+    nav.insertAdjacentElement("afterend", wrap);
+
+    if (!document.getElementById("vm-download-app-style")) {
+      const style = document.createElement("style");
+      style.id = "vm-download-app-style";
+      style.textContent = `
+        .vm-download-app-wrap{
+          width:100%;
+          margin:18px 0 0;
+          text-align:center;
+        }
+        .vm-download-app-btn{
+          width:min(975px,calc(100% - 70px));
+          min-height:74px;
+          margin:0 auto;
+          padding:0 24px;
+          display:flex;
+          align-items:center;
+          justify-content:center;
+          gap:12px;
+          border:1px solid #b85cff;
+          border-radius:17px;
+          background:linear-gradient(100deg,#7722d0,#b23ff0);
+          color:#fff;
+          text-decoration:none;
+          font-size:22px;
+          font-weight:800;
+          line-height:1.15;
+          box-shadow:0 0 24px rgba(153,62,239,.28);
+          transition:transform .15s ease,box-shadow .15s ease,filter .15s ease;
+        }
+        .vm-download-app-btn:hover{
+          transform:translateY(-1px);
+          filter:brightness(1.06);
+          box-shadow:0 0 30px rgba(153,62,239,.40);
+        }
+        .vm-download-app-btn:active{transform:scale(.99)}
+        .vm-download-app-icon{
+          width:24px;
+          height:24px;
+          display:inline-flex;
+          align-items:center;
+          justify-content:center;
+          color:#fff;
+          font-size:24px;
+          line-height:1;
+          flex:0 0 24px;
+        }
+        .vm-download-app-subtitle{
+          margin:9px auto 0;
+          color:#bdb6c8;
+          font-size:15px;
+          line-height:1.4;
+        }
+        @media(max-width:700px){
+          .vm-download-app-wrap{margin:14px 0 0}
+          .vm-download-app-btn{
+            width:100%;
+            min-height:58px;
+            padding:0 12px;
+            border-radius:13px;
+            gap:8px;
+            font-size:16px;
+          }
+          .vm-download-app-icon{font-size:19px;width:20px;height:20px;flex-basis:20px}
+          .vm-download-app-subtitle{font-size:10px;margin-top:7px}
+        }
+      `;
+      document.head.appendChild(style);
+    }
+  }
+
   function render(data){
+    ensureDownloadButton();
+
     const c = data.current;
     const n = data.next;
     if (!c) return;
@@ -166,9 +257,19 @@
       render({ current, next, history, updated: Date.now() });
     } catch (e) {
       console.warn("VM RADIO flux:", e);
+      ensureDownloadButton();
     }
   }
 
-  update();
-  setInterval(update, REFRESH_MS);
+  function init(){
+    ensureDownloadButton();
+    update();
+    setInterval(update, REFRESH_MS);
+  }
+
+  if (document.readyState === "loading") {
+    document.addEventListener("DOMContentLoaded", init, {once:true});
+  } else {
+    init();
+  }
 })();
