@@ -1,19 +1,19 @@
-/* VM RADIO — source unique moteur + flux */
+/* VM RADIO — source unique moteur + flux v4 */
 (function(){
   'use strict';
 
   const ENGINE='https://admin.vmradio.fr/api/radio/nowplaying';
   const STREAM='https://radio.vmradio.fr/radio.mp3';
   const DEFAULT_ARTIST='Music IA By Valentin';
-  const REFRESH=8000;
+  const REFRESH=5000;
 
   window.__VMRADIO_STREAM_URL__=STREAM;
-  if(window.__VMRADIO_CENTRAL_V3__) return;
-  window.__VMRADIO_CENTRAL_V3__=true;
+  if(window.__VMRADIO_CENTRAL_V4__) return;
+  window.__VMRADIO_CENTRAL_V4__=true;
 
-  const first=(...values)=>values.find(v=>v!==undefined&&v!==null&&String(v).trim()!=='')??'';
-  const titleCaseFirst=v=>{const s=String(v??'').trim();return s?s.charAt(0).toLocaleUpperCase('fr-FR')+s.slice(1):''};
-  const clock=v=>{if(!v)return '--:--';const d=typeof v==='number'?new Date(v*1000):new Date(v);return Number.isNaN(d.getTime())?'--:--':d.toLocaleTimeString('fr-FR',{hour:'2-digit',minute:'2-digit'})};
+  const first=(...v)=>v.find(x=>x!==undefined&&x!==null&&String(x).trim()!=='')??'';
+  const cap=v=>{const s=String(v??'').trim();return s?s.charAt(0).toLocaleUpperCase('fr-FR')+s.slice(1):''};
+  const clock=v=>{if(!v)return'--:--';const d=typeof v==='number'?new Date(v*1000):new Date(v);return Number.isNaN(d.getTime())?'--:--':d.toLocaleTimeString('fr-FR',{hour:'2-digit',minute:'2-digit'})};
 
   function track(song,meta){
     if(!song||typeof song!=='object') return null;
@@ -22,7 +22,7 @@
     const playlist=String(meta?.playlist||'').toLowerCase();
     return {
       id:String(first(song.id,song.track_id,title)),
-      title:titleCaseFirst(title),
+      title:cap(title),
       artist:String(first(song.artist,song.artist_name)||DEFAULT_ARTIST).trim(),
       cover:String(first(song.art,song.cover,song.cover_url,song.artwork,song.artwork_url)||''),
       time:first(meta?.played_at,meta?.started_at,meta?.time),
@@ -46,8 +46,17 @@
     const v=String(value);
     document.querySelectorAll(selector).forEach(el=>{
       if(el.tagName!=='IMG') return;
-      const current=el.getAttribute('src')||'';
-      if(current!==v) el.setAttribute('src',v);
+      if((el.getAttribute('src')||'')===v || el.dataset.vmPendingCover===v) return;
+      el.dataset.vmPendingCover=v;
+      const probe=new Image();
+      probe.onload=()=>{
+        if(el.dataset.vmPendingCover===v && (el.getAttribute('src')||'')!==v){
+          el.setAttribute('src',v);
+        }
+        delete el.dataset.vmPendingCover;
+      };
+      probe.onerror=()=>{if(el.dataset.vmPendingCover===v)delete el.dataset.vmPendingCover};
+      probe.src=v;
     });
   }
 
@@ -89,10 +98,7 @@
     try{
       if('mediaSession' in navigator){
         navigator.mediaSession.metadata=new MediaMetadata({
-          title:current.title||'VM RADIO',
-          artist:current.artist||DEFAULT_ARTIST,
-          album:'VM RADIO',
-          artwork:current.cover?[{src:current.cover}]:[]
+          title:current.title||'VM RADIO',artist:current.artist||DEFAULT_ARTIST,album:'VM RADIO',artwork:current.cover?[{src:current.cover}]:[]
         });
       }
     }catch(_){ }
@@ -101,102 +107,84 @@
   async function refresh(){
     try{
       const d=await getEngine();
-      const current=track(d?.now_playing?.song,d?.now_playing);
-      const next=track(d?.playing_next?.song,d?.playing_next);
-      const history=(Array.isArray(d?.song_history)?d.song_history:[]).map(x=>track(x?.song,x)).filter(Boolean);
-      render(current,next,history);
-    }catch(e){
-      console.warn('VM RADIO moteur indisponible',e);
+      render(
+        track(d?.now_playing?.song,d?.now_playing),
+        track(d?.playing_next?.song,d?.playing_next),
+        (Array.isArray(d?.song_history)?d.song_history:[]).map(x=>track(x?.song,x)).filter(Boolean)
+      );
+    }catch(e){console.warn('VM RADIO moteur indisponible',e)}
+  }
+
+  function getAudio(){return document.getElementById('radioAudio')||document.querySelector('audio')}
+  function getStatus(){return document.getElementById('statusText')||document.querySelector('[data-player-status]')}
+
+  function forceStream(audio){
+    if(!audio) return;
+    audio.removeAttribute('crossorigin');
+    try{audio.crossOrigin=null}catch(_){ }
+    if((audio.getAttribute('src')||'')!==STREAM){
+      audio.setAttribute('src',STREAM);
+      audio.src=STREAM;
+      audio.load();
     }
   }
 
-  function initPlayer(){
-    const audio=document.getElementById('radioAudio')||document.querySelector('audio');
-    const original=document.getElementById('playBtn')||document.querySelector('.play-btn,[data-play-player]');
-    if(!audio||!original) return;
+  function syncPlayer(audio){
+    if(!audio) return;
+    const playing=!audio.paused&&!audio.ended;
+    const path=document.getElementById('playPausePath');
+    if(path)path.setAttribute('d',playing?'M7 5h4v14H7zm6 0h4v14h-4z':'M8 5.2v13.6L19 12 8 5.2z');
+    document.querySelectorAll('#playBtn,.play-btn,[data-play-player]').forEach(btn=>btn.setAttribute('aria-label',playing?'Mettre en pause':'Écouter VM RADIO'));
+    const status=getStatus();
+    if(status)status.textContent=playing?'EN DIRECT':'PRÊT À ÉCOUTER';
+  }
 
-    // Supprime tous les anciens listeners directs du bouton (ancien player / RadioKing).
-    const button=original.cloneNode(true);
-    original.replaceWith(button);
+  async function togglePlayer(e){
+    const btn=e.target?.closest?.('#playBtn,.play-btn,[data-play-player]');
+    if(!btn) return;
+    const audio=getAudio();
+    if(!audio) return;
+    e.preventDefault();
+    e.stopPropagation();
+    e.stopImmediatePropagation();
 
-    const iconPath=button.querySelector('#playPausePath')||document.getElementById('playPausePath');
-    const status=document.getElementById('statusText')||document.querySelector('[data-player-status]');
-    const volume=document.getElementById('volume');
-
-    function forceStream(){
-      if(audio.getAttribute('src')!==STREAM){
-        audio.pause();
-        audio.setAttribute('src',STREAM);
-        audio.src=STREAM;
-        audio.load();
-      }
+    if(!audio.paused){
+      audio.pause();
+      syncPlayer(audio);
+      return;
     }
 
-    function sync(){
-      const playing=!audio.paused&&!audio.ended;
-      if(iconPath) iconPath.setAttribute('d',playing?'M7 5h4v14H7zm6 0h4v14h-4z':'M8 5.2v13.6L19 12 8 5.2z');
-      button.setAttribute('aria-label',playing?'Mettre en pause':'Écouter VM RADIO');
-      if(status) status.textContent=playing?'EN DIRECT':'PRÊT À ÉCOUTER';
+    forceStream(audio);
+    const status=getStatus();
+    if(status)status.textContent='CONNEXION…';
+    try{
+      await audio.play();
+      syncPlayer(audio);
+    }catch(err){
+      if(status)status.textContent='FLUX INDISPONIBLE';
+      console.warn('VM RADIO lecture impossible',err);
     }
+  }
 
-    forceStream();
+  function initAudio(){
+    const audio=getAudio();
+    if(!audio) return;
+    forceStream(audio);
     audio.preload='none';
-
-    button.addEventListener('click',async e=>{
-      e.preventDefault();
-      e.stopPropagation();
-      e.stopImmediatePropagation();
-
-      if(!audio.paused){
-        audio.pause();
-        sync();
-        return;
-      }
-
-      forceStream();
-      if(status) status.textContent='CONNEXION…';
-      try{
-        await audio.play();
-      }catch(err){
-        if(status) status.textContent='FLUX INDISPONIBLE';
-        console.warn('VM RADIO lecture impossible',err);
-      }
-      sync();
-    },true);
-
-    audio.addEventListener('play',sync);
-    audio.addEventListener('playing',sync);
-    audio.addEventListener('pause',sync);
-    audio.addEventListener('error',()=>{if(status)status.textContent='FLUX INDISPONIBLE'});
-
-    if(volume){
-      audio.volume=Number(volume.value||0.85);
-      volume.addEventListener('input',()=>{audio.volume=Number(volume.value)});
-    }
-
-    // Empêche un ancien script de remettre une autre URL après notre initialisation.
-    new MutationObserver(()=>{
-      if(audio.getAttribute('src')!==STREAM) forceStream();
-    }).observe(audio,{attributes:true,attributeFilter:['src']});
-
-    window.VMRadioPlayer={
-      play:async()=>{forceStream();return audio.play()},
-      pause:()=>audio.pause(),
-      stream:STREAM
-    };
-
-    sync();
+    audio.addEventListener('play',()=>syncPlayer(audio));
+    audio.addEventListener('playing',()=>syncPlayer(audio));
+    audio.addEventListener('pause',()=>syncPlayer(audio));
+    audio.addEventListener('error',()=>{const s=getStatus();if(s)s.textContent='FLUX INDISPONIBLE'});
+    const volume=document.getElementById('volume');
+    if(volume){audio.volume=Number(volume.value||0.85);volume.addEventListener('input',()=>{audio.volume=Number(volume.value)})}
+    new MutationObserver(()=>{if((audio.getAttribute('src')||'')!==STREAM)forceStream(audio)}).observe(audio,{attributes:true,attributeFilter:['src','crossorigin']});
+    window.VMRadioPlayer={play:async()=>{forceStream(audio);return audio.play()},pause:()=>audio.pause(),stream:STREAM};
+    syncPlayer(audio);
   }
 
-  if(document.readyState==='loading'){
-    document.addEventListener('DOMContentLoaded',()=>{
-      initPlayer();
-      refresh();
-    },{once:true});
-  }else{
-    initPlayer();
-    refresh();
-  }
+  document.addEventListener('click',togglePlayer,true);
 
+  const init=()=>{initAudio();refresh()};
+  if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',init,{once:true});else init();
   setInterval(refresh,REFRESH);
 })();
