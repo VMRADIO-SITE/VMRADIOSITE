@@ -11,7 +11,15 @@
 <body>
 <section class="radio-player" id="radioPlayer" aria-label="Player VM RADIO"><div class="player-inner"><div class="current-section"><div class="cover-wrap"><img id="currentCover" data-current-cover alt="Pochette du titre actuel"></div><div class="eyebrow">VM RADIO • EN DIRECT</div><div class="live-indicator"><i></i><span>EN DIRECT</span></div><h1 class="current-title" id="currentTitle" data-current-title>Chargement…</h1><p class="current-artist" id="currentArtist" data-current-artist>VM RADIO</p><div class="meta-row"><span>Diffusion</span><strong id="broadcastTime" data-current-time>--:--</strong></div><div class="controls"><button class="play-btn" id="playBtn" type="button" aria-label="Écouter VM RADIO"><svg viewBox="0 0 24 24"><path id="playPausePath" d="M8 5.2v13.6L19 12 8 5.2z"/></svg></button><button class="heart-btn" data-heart type="button" aria-label="J'aime">♥</button></div><div class="status" id="statusText">PRÊT À ÉCOUTER</div></div><aside class="next-section"><div class="next-label">TITRE SUIVANT</div><div class="next-card"><img id="nextCover" data-next-cover alt="Pochette du prochain titre"><div><h2 class="next-title" id="nextTitle" data-next-title>Chargement…</h2><p class="next-artist" id="nextArtist" data-next-artist>Artiste</p><div class="next-time">Diffusion prévue à <span id="nextTime" data-next-time>--:--</span></div></div></div><p class="next-note">Données synchronisées directement avec VM RADIO.</p></aside></div><div class="syncbar"><div class="sync-left"><span class="sync-dot"></span><span>Player synchronisé</span></div><div id="vmPlayerClock">--:--:--</div></div></section>
 <audio id="radioAudio" preload="none" playsinline src="https://radio.vmradio.fr/listen/vm_radio/radio.mp3"></audio>
-<script src="vm-radio-flux-central.js?v=8"></script>
+<script>
+window.__VMRADIO_DIRECT_PLAYER__=true;
+(function(){
+const STREAM='https://radio.vmradio.fr/listen/vm_radio/radio.mp3';const audio=document.getElementById('radioAudio');const btn=document.getElementById('playBtn');const path=document.getElementById('playPausePath');const status=document.getElementById('statusText');
+function sync(){const playing=!audio.paused&&!audio.ended;if(path)path.setAttribute('d',playing?'M7 5h4v14H7zm6 0h4v14H13z':'M8 5.2v13.6L19 12 8 5.2z');status.textContent=playing?'EN DIRECT':'PRÊT À ÉCOUTER';btn.setAttribute('aria-label',playing?'Mettre en pause':'Écouter VM RADIO')}
+btn.addEventListener('click',async function(e){e.preventDefault();e.stopPropagation();if(!audio.paused){audio.pause();sync();return}status.textContent='CONNEXION…';try{audio.src=STREAM;audio.load();await audio.play();sync()}catch(err){status.textContent='FLUX INDISPONIBLE';console.error('VM RADIO direct player mobile',err)}});
+audio.addEventListener('play',sync);audio.addEventListener('playing',sync);audio.addEventListener('pause',sync);audio.addEventListener('waiting',()=>status.textContent='CONNEXION…');audio.addEventListener('error',()=>{status.textContent='FLUX INDISPONIBLE';console.error('VM RADIO direct mobile audio error',audio.error?.code,audio.error?.message)});window.VMRadioPlayer={play:()=>audio.play(),pause:()=>audio.pause(),stream:STREAM,audio};sync();
+})();
+</script>
+<script src="vm-radio-flux-central.js?v=9"></script>
 <script>(function(){const clock=document.getElementById('vmPlayerClock');const fmt=new Intl.DateTimeFormat('fr-FR',{timeZone:'Europe/Paris',hour:'2-digit',minute:'2-digit',second:'2-digit',hour12:false});function tick(){if(clock)clock.textContent=fmt.format(new Date())}tick();setInterval(tick,1000);document.querySelector('[data-heart]')?.addEventListener('click',e=>e.currentTarget.classList.toggle('liked'))})();</script>
-</body>
-</html>
+</body></html>
