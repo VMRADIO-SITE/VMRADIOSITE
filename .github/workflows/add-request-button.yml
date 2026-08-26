@@ -1,4 +1,4 @@
-name: Ajouter bouton demande musique
+name: Relier bouton demande musique
 
 on:
   push:
@@ -18,7 +18,7 @@ jobs:
         with:
           fetch-depth: 0
 
-      - name: Ajouter le bouton directement dans index.html
+      - name: Corriger le bouton sous Notre programme musical
         run: |
           python3 <<'PY'
           from pathlib import Path
@@ -26,41 +26,11 @@ jobs:
           p = Path('index.html')
           s = p.read_text(encoding='utf-8')
 
-          if 'id="vmRequestHomeButtonStatic"' in s:
-              print('Bouton déjà présent dans index.html')
-              raise SystemExit(0)
+          # Le bouton doit déjà être présent sous le sous-titre.
+          if 'id="vmRequestHomeButtonStatic"' not in s:
+              raise SystemExit('Bouton vmRequestHomeButtonStatic introuvable dans index.html')
 
-          target = '<p class="homepage-program-subtitle">Retrouvez notre programme en temps réel !</p><div aria-hidden="true" class="homepage-program-space"></div>'
-
-          replacement = '''<p class="homepage-program-subtitle">Retrouvez notre programme en temps réel !</p>
-          <div id="vmRequestHomeButton" class="vm-request-home-wrap">
-          <button id="vmRequestHomeButtonStatic" class="vm-request-home-button" type="button">♫ DEMANDE DE MUSIQUE</button>
-          </div>
-          <div aria-hidden="true" class="homepage-program-space"></div>'''
-
-          if target not in s:
-              raise SystemExit('Sous-titre programme introuvable dans index.html')
-
-          s = s.replace(target, replacement, 1)
-
-          css = '''
-          <style id="vmradio-request-home-static">
-          .vm-request-home-wrap{display:flex!important;justify-content:center!important;align-items:center!important;width:100%!important;margin:14px 0 8px!important}
-          .vm-request-home-button{display:inline-flex!important;align-items:center!important;justify-content:center!important;gap:8px!important;min-width:270px!important;max-width:100%!important;padding:12px 22px!important;border:1px solid #b85cff!important;border-radius:11px!important;background:linear-gradient(135deg,#170b25,#0b0711)!important;color:#fff!important;font:800 13px/1.1 Arial,sans-serif!important;letter-spacing:.25px!important;cursor:pointer!important;box-shadow:0 0 18px rgba(184,92,255,.18)!important}
-          .vm-request-home-button:hover{color:#dc9cff!important;box-shadow:0 0 26px rgba(184,92,255,.32)!important}
-          @media(max-width:700px){.vm-request-home-wrap{margin:10px 0 6px!important}.vm-request-home-button{min-width:0!important;width:min(100%,250px)!important;padding:10px 14px!important;font-size:10px!important;border-radius:9px!important}}
-          </style>
-          <script id="vmradio-request-home-static-controller">
-          (function(){
-            'use strict';
-            function loadUi(){
-              if(window.__VMRADIO_REQUEST_UI__ || document.querySelector('script[data-vm-request-ui-static]')) return;
-              var s=document.createElement('script');
-              s.src='music-requests-ui.js?v=20260826-8';
-              s.dataset.vmRequestUiStatic='1';
-              document.head.appendChild(s);
-            }
-            function openRequests(){
+          old = '''function openRequests(){
               var modal=document.getElementById('vmRequestModal');
               if(modal){ modal.classList.add('open'); return; }
               loadUi();
@@ -70,26 +40,37 @@ jobs:
                 if(m){ clearInterval(timer); m.classList.add('open'); var q=m.querySelector('#vmreqSearch'); if(q) q.focus(); }
                 else if(++tries>40){ clearInterval(timer); }
               },100);
-            }
-            function bind(){
-              var b=document.getElementById('vmRequestHomeButtonStatic');
-              if(!b || b.dataset.vmBound==='1') return;
-              b.dataset.vmBound='1';
-              b.addEventListener('click',openRequests);
-              loadUi();
-            }
-            if(document.readyState==='loading') document.addEventListener('DOMContentLoaded',bind,{once:true}); else bind();
-            window.addEventListener('vmradio:pagechange',function(){setTimeout(bind,0)});
-          })();
-          </script>
-          '''
+            }'''
 
-          if '</head>' not in s:
-              raise SystemExit('</head> introuvable dans index.html')
-          s = s.replace('</head>', css + '\n</head>', 1)
+          new = '''function openRequests(){
+              if(typeof window.VMRADIO_OPEN_REQUEST_CATALOG==='function'){
+                window.VMRADIO_OPEN_REQUEST_CATALOG();
+                return;
+              }
+              loadUi();
+              var tries=0;
+              var timer=setInterval(function(){
+                if(typeof window.VMRADIO_OPEN_REQUEST_CATALOG==='function'){
+                  clearInterval(timer);
+                  window.VMRADIO_OPEN_REQUEST_CATALOG();
+                } else if(++tries>60){
+                  clearInterval(timer);
+                  console.error('VM RADIO: catalogue de demandes non initialisé');
+                }
+              },100);
+            }'''
+
+          if old in s:
+              s = s.replace(old, new, 1)
+          elif 'window.VMRADIO_OPEN_REQUEST_CATALOG();' not in s:
+              raise SystemExit('Ancien contrôleur du bouton introuvable')
+
+          # Forcer la dernière version du module pour éviter un cache ancien.
+          s = s.replace("music-requests-ui.js?v=20260826-8", "music-requests-ui.js?v=20260826-10")
+          s = s.replace("music-requests-ui.js?v=20260826-9", "music-requests-ui.js?v=20260826-10")
 
           p.write_text(s, encoding='utf-8')
-          print('Bouton statique ajouté directement dans index.html')
+          print('Bouton sous Notre programme musical relié à VMRADIO_OPEN_REQUEST_CATALOG')
           PY
 
       - name: Commit de index.html
@@ -101,5 +82,5 @@ jobs:
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
           git add index.html
-          git commit -m "Place Demande de musique sous le programme"
+          git commit -m "Relie le bouton programme au catalogue"
           git push
