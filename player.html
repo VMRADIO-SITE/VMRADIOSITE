@@ -226,7 +226,8 @@ h1,h2,p{margin:0}
 </style>
 <script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-app-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-auth-compat.js"></script>
-<script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-firestore-compat.js"></script></head>
+<script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-firestore-compat.js"></script><script src="vm-radio-flux-central.js"></script>
+</head>
 <body>
 <section class="radio-player" id="radioPlayer" aria-label="Player VM RADIO">
   <div class="player-inner">
@@ -292,7 +293,7 @@ const CONFIG = {
   // RadioKing listening link supplied for VM RADIO.
   // If your browser does not accept it as an <audio> source, replace it
   // with the MP3/AAC stream shown in RadioKing > Settings > Stream.
-  streamUrl: "https://api.radioking.io/radio/917591/listen",
+  streamUrl: "https://radio.vmradio.fr/radio.mp3",
   fallbackCover: "assets/vm-radio-default-cover.jpeg",
   refreshMs: 20000
 };
@@ -599,8 +600,8 @@ document.querySelectorAll("[data-heart]").forEach(btn => {
   const status=document.getElementById("statusText");
   if(!audio || !btn) return;
 
-  const DIRECT="https://api.radioking.io/radio/917591/listen";
-  const M3U="https://api.radioking.io/radio/917591/listen.m3u";
+  const DIRECT="https://radio.vmradio.fr/radio.mp3";
+  const M3U="https://radio.vmradio.fr/radio.mp3";
 
   function update(){
     const playing=!audio.paused && !audio.ended;
