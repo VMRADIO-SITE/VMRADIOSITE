@@ -2,7 +2,7 @@
 (function(){
 'use strict';
 const ENGINE='https://admin.vmradio.fr/api/radio/nowplaying';
-const STREAM='https://radio.vmradio.fr/radio.mp3';
+const STREAM='https://radio.vmradio.fr/listen/vm_radio/radio.mp3';
 const DEFAULT_ARTIST='Music IA By Valentin';
 const REFRESH=1000;
 window.__VMRADIO_STREAM_URL__=STREAM;
