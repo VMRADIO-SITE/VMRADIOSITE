@@ -1739,6 +1739,46 @@ window.addEventListener("vmradio:pagechange",function(){
 </style>
 
 <link rel="icon" type="image/png" href="./favicon-64.png?v=6"><link rel="apple-touch-icon" href="./apple-touch-icon.png?v=6"><script src="vm-radio-flux-central.js"></script>
+
+<style id="vmradio-request-home-static">
+.vm-request-home-wrap{display:flex!important;justify-content:center!important;align-items:center!important;width:100%!important;margin:14px 0 8px!important}
+.vm-request-home-button{display:inline-flex!important;align-items:center!important;justify-content:center!important;gap:8px!important;min-width:270px!important;max-width:100%!important;padding:12px 22px!important;border:1px solid #b85cff!important;border-radius:11px!important;background:linear-gradient(135deg,#170b25,#0b0711)!important;color:#fff!important;font:800 13px/1.1 Arial,sans-serif!important;letter-spacing:.25px!important;cursor:pointer!important;box-shadow:0 0 18px rgba(184,92,255,.18)!important}
+.vm-request-home-button:hover{color:#dc9cff!important;box-shadow:0 0 26px rgba(184,92,255,.32)!important}
+@media(max-width:700px){.vm-request-home-wrap{margin:10px 0 6px!important}.vm-request-home-button{min-width:0!important;width:min(100%,250px)!important;padding:10px 14px!important;font-size:10px!important;border-radius:9px!important}}
+</style>
+<script id="vmradio-request-home-static-controller">
+(function(){
+  'use strict';
+  function loadUi(){
+    if(window.__VMRADIO_REQUEST_UI__ || document.querySelector('script[data-vm-request-ui-static]')) return;
+    var s=document.createElement('script');
+    s.src='music-requests-ui.js?v=20260826-8';
+    s.dataset.vmRequestUiStatic='1';
+    document.head.appendChild(s);
+  }
+  function openRequests(){
+    var modal=document.getElementById('vmRequestModal');
+    if(modal){ modal.classList.add('open'); return; }
+    loadUi();
+    var tries=0;
+    var timer=setInterval(function(){
+      var m=document.getElementById('vmRequestModal');
+      if(m){ clearInterval(timer); m.classList.add('open'); var q=m.querySelector('#vmreqSearch'); if(q) q.focus(); }
+      else if(++tries>40){ clearInterval(timer); }
+    },100);
+  }
+  function bind(){
+    var b=document.getElementById('vmRequestHomeButtonStatic');
+    if(!b || b.dataset.vmBound==='1') return;
+    b.dataset.vmBound='1';
+    b.addEventListener('click',openRequests);
+    loadUi();
+  }
+  if(document.readyState==='loading') document.addEventListener('DOMContentLoaded',bind,{once:true}); else bind();
+  window.addEventListener('vmradio:pagechange',function(){setTimeout(bind,0)});
+})();
+</script>
+
 </head><body>
 <div class="page">
 <div aria-label="Dédicaces" class="vm-common-dedication-banner">
@@ -1761,7 +1801,11 @@ window.addEventListener("vmradio:pagechange",function(){
     <em>📱&nbsp; VOTRE RADIO, PARTOUT AVEC VOUS</em>
   </span>
 </a>
-<p class="vm-download-text">Installe VM RADIO sur ton appareil et retrouve ta radio directement depuis ton écran d’accueil.</p><div class="program-title" style="margin-top:0 !important">〽 <span>NOTRE PROGRAMME MUSICAL</span> 〽</div><p class="homepage-program-subtitle">Retrouvez notre programme en temps réel !</p><div aria-hidden="true" class="homepage-program-space"></div>
+<p class="vm-download-text">Installe VM RADIO sur ton appareil et retrouve ta radio directement depuis ton écran d’accueil.</p><div class="program-title" style="margin-top:0 !important">〽 <span>NOTRE PROGRAMME MUSICAL</span> 〽</div><p class="homepage-program-subtitle">Retrouvez notre programme en temps réel !</p>
+<div id="vmRequestHomeButton" class="vm-request-home-wrap">
+<button id="vmRequestHomeButtonStatic" class="vm-request-home-button" type="button">♫ DEMANDE DE MUSIQUE</button>
+</div>
+<div aria-hidden="true" class="homepage-program-space"></div>
 <section id="accueil">
 <div class="grid-top">
 <article class="card" id="programme-direct"><h2>EN DIRECT <span class="live">● LIVE</span></h2><p class="module-subtitle">Écoutez VM RADIO en direct.</p><div class="now"><img class="cover" data-current-cover=""/><div><div class="title" data-current-title=""></div><div class="artist" data-current-artist=""></div><div class="wave">▂▅▇▅▃▇▅▂▅▇▃</div><div class="time">Diffusé à <span data-current-time=""></span></div></div></div></article>
