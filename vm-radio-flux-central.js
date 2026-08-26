@@ -1,4 +1,4 @@
-/* VM RADIO — source unique moteur + flux v5 */
+/* VM RADIO — source unique moteur + flux v6 */
 (function(){
 'use strict';
 const ENGINE='https://admin.vmradio.fr/api/radio/nowplaying';
@@ -6,8 +6,11 @@ const STREAM='https://radio.vmradio.fr/listen/vm_radio/radio.mp3';
 const DEFAULT_ARTIST='Music IA By Valentin';
 const REFRESH=1000;
 window.__VMRADIO_STREAM_URL__=STREAM;
-if(window.__VMRADIO_CENTRAL_V5__)return;
-window.__VMRADIO_CENTRAL_V5__=true;
+if(window.__VMRADIO_CENTRAL_V6__)return;
+window.__VMRADIO_CENTRAL_V6__=true;
+const liveAudio=new Audio();
+liveAudio.preload='none';
+liveAudio.src=STREAM;
 const first=(...v)=>v.find(x=>x!==undefined&&x!==null&&String(x).trim()!=='')??'';
 const cap=v=>{const s=String(v??'').trim();return s?s.charAt(0).toLocaleUpperCase('fr-FR')+s.slice(1):''};
 const clock=v=>{if(!v)return'--:--';const d=typeof v==='number'?new Date(v*1000):new Date(v);return Number.isNaN(d.getTime())?'--:--':d.toLocaleTimeString('fr-FR',{hour:'2-digit',minute:'2-digit'})};
@@ -21,12 +24,10 @@ function render(current,next,history){if(!current)return;const currentKey=[curre
 if(next){const nextKey=[next.id,next.title,next.artist,next.cover,next.time].join('|');if(nextKey!==lastNextKey){lastNextKey=nextKey;setText('[data-next-title],#nextTitle,#programNext,.next-title',next.title);setText('[data-next-artist],#nextArtist,.next-artist',next.artist);setText('[data-next-time],#nextTime,.next-time',clock(next.time));setImage('[data-next-cover],#nextCover,.next-cover,.next-card img',next.cover);setText('[data-news-next]',next.title);setText('[data-news-next-artist]',next.artist);setText('[data-news-next-time]',clock(next.time));setImage('[data-news-next-cover]',next.cover)}}
 const previous=(history||[]).filter(x=>x&&x.id!==current.id&&x.type==='music').slice(0,3),last=previous[0];if(last){setText('[data-news-last]',last.title);setText('[data-news-last-artist]',last.artist);setText('[data-news-last-time]',clock(last.time));setImage('[data-news-last-cover]',last.cover)}}
 let refreshing=false;async function refresh(){if(refreshing)return;refreshing=true;try{const d=await getEngine();render(track(d?.now_playing?.song,d?.now_playing),track(d?.playing_next?.song,d?.playing_next),(Array.isArray(d?.song_history)?d.song_history:[]).map(x=>track(x?.song,x)).filter(Boolean))}catch(e){console.warn('VM RADIO moteur indisponible',e)}finally{refreshing=false}}
-function getAudio(){return document.getElementById('radioAudio')||document.querySelector('audio')}
 function getStatus(){return document.getElementById('statusText')||document.querySelector('[data-player-status]')}
-function forceStream(audio){if(!audio)return;audio.removeAttribute('crossorigin');try{audio.crossOrigin=null}catch(_){ }if((audio.getAttribute('src')||'')!==STREAM){audio.setAttribute('src',STREAM);audio.src=STREAM;audio.load()}}
-function syncPlayer(audio){if(!audio)return;const playing=!audio.paused&&!audio.ended;const path=document.getElementById('playPausePath');if(path)path.setAttribute('d',playing?'M7 5h4v14H7zm6 0h4v14h-4z':'M8 5.2v13.6L19 12 8 5.2z');document.querySelectorAll('#playBtn,.play-btn,[data-play-player]').forEach(btn=>btn.setAttribute('aria-label',playing?'Mettre en pause':'Écouter VM RADIO'));const status=getStatus();if(status)status.textContent=playing?'EN DIRECT':'PRÊT À ÉCOUTER'}
-async function togglePlayer(e){const btn=e.target?.closest?.('#playBtn,.play-btn,[data-play-player]');if(!btn)return;const audio=getAudio();if(!audio)return;e.preventDefault();e.stopPropagation();e.stopImmediatePropagation();if(!audio.paused){audio.pause();syncPlayer(audio);return}forceStream(audio);const status=getStatus();if(status)status.textContent='CONNEXION…';try{await audio.play();syncPlayer(audio)}catch(err){if(status)status.textContent='FLUX INDISPONIBLE';console.warn('VM RADIO lecture impossible',err)}}
-function initAudio(){const audio=getAudio();if(!audio)return;forceStream(audio);audio.preload='none';audio.addEventListener('play',()=>syncPlayer(audio));audio.addEventListener('playing',()=>syncPlayer(audio));audio.addEventListener('pause',()=>syncPlayer(audio));audio.addEventListener('error',()=>{const s=getStatus();if(s)s.textContent='FLUX INDISPONIBLE'});const volume=document.getElementById('volume');if(volume){audio.volume=Number(volume.value||0.85);volume.addEventListener('input',()=>{audio.volume=Number(volume.value)})}new MutationObserver(()=>{if((audio.getAttribute('src')||'')!==STREAM||audio.hasAttribute('crossorigin'))forceStream(audio)}).observe(audio,{attributes:true,attributeFilter:['src','crossorigin']});window.VMRadioPlayer={play:async()=>{forceStream(audio);return audio.play()},pause:()=>audio.pause(),stream:STREAM};syncPlayer(audio)}
+function syncPlayer(){const playing=!liveAudio.paused&&!liveAudio.ended;const path=document.getElementById('playPausePath');if(path)path.setAttribute('d',playing?'M7 5h4v14H7zm6 0h4v14H13z':'M8 5.2v13.6L19 12 8 5.2z');document.querySelectorAll('#playBtn,.play-btn,[data-play-player]').forEach(btn=>btn.setAttribute('aria-label',playing?'Mettre en pause':'Écouter VM RADIO'));const status=getStatus();if(status)status.textContent=playing?'EN DIRECT':'PRÊT À ÉCOUTER'}
+async function togglePlayer(e){const btn=e.target?.closest?.('#playBtn,.play-btn,[data-play-player]');if(!btn)return;e.preventDefault();e.stopPropagation();e.stopImmediatePropagation();if(!liveAudio.paused){liveAudio.pause();syncPlayer();return}const status=getStatus();if(status)status.textContent='CONNEXION…';try{liveAudio.src=STREAM;await liveAudio.play();syncPlayer()}catch(err){if(status)status.textContent='FLUX INDISPONIBLE';console.warn('VM RADIO lecture impossible',err)}}
+function initAudio(){document.querySelectorAll('audio').forEach(a=>{try{a.pause();a.removeAttribute('src');a.removeAttribute('crossorigin');a.load()}catch(_){}});const volume=document.getElementById('volume');if(volume){liveAudio.volume=Number(volume.value||0.85);volume.addEventListener('input',()=>{liveAudio.volume=Number(volume.value)})}liveAudio.addEventListener('play',syncPlayer);liveAudio.addEventListener('playing',syncPlayer);liveAudio.addEventListener('pause',syncPlayer);liveAudio.addEventListener('error',()=>{const s=getStatus();if(s)s.textContent='FLUX INDISPONIBLE'});window.VMRadioPlayer={play:()=>liveAudio.play(),pause:()=>liveAudio.pause(),stream:STREAM,audio:liveAudio};syncPlayer()}
 document.addEventListener('click',togglePlayer,true);
 const init=()=>{protectImages();initAudio();refresh();setInterval(refresh,REFRESH);document.addEventListener('visibilitychange',()=>{if(!document.hidden)refresh()});window.addEventListener('focus',refresh)};
 if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',init,{once:true});else init();
