@@ -13,75 +13,13 @@ body{display:flex;align-items:center;justify-content:center;padding:24px}
 .player-inner{display:grid;grid-template-columns:420px minmax(0,1fr);gap:22px;padding:28px}
 .current-section{display:flex;align-items:center;gap:18px;min-width:0}
 .cover-wrap{flex:0 0 135px;width:135px;height:135px;border-radius:22px;padding:1px;background:linear-gradient(135deg,var(--violet2),#38106e 55%,#12061d);box-shadow:0 0 35px rgba(142,44,255,.25);overflow:hidden}
-.cover-wrap img{width:100%;height:100%;display:block;object-fit:cover;border-radius:21px;background:#160d20}
-.track-info{min-width:0;flex:1}
-.eyebrow{font-size:11px;letter-spacing:2px;color:#b99ccf;font-weight:800;margin-bottom:8px}
-.live-indicator{display:flex;align-items:center;gap:7px;margin-bottom:9px;font-size:10px;font-weight:900;letter-spacing:1.6px}
-.live-indicator i{width:8px;height:8px;border-radius:50%;background:#ff3b4f;box-shadow:0 0 8px rgba(255,59,79,.65);animation:blink 1s ease-in-out infinite}
-@keyframes blink{50%{opacity:.28;transform:scale(.8)}}
-h1,h2,p{margin:0}
-.current-title{font-size:25px;line-height:1.08;font-weight:900;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-.current-artist{margin-top:8px;color:var(--muted);font-size:16px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-.meta-row{display:flex;align-items:center;gap:8px;margin-top:12px;color:#c8bed1;font-size:12px}.meta-row strong{color:#fff}
-.controls{display:flex;align-items:center;gap:12px;margin-top:16px}
-.play-btn,.heart-btn{display:grid;place-items:center;border-radius:50%;cursor:pointer;color:#fff}
-.play-btn{width:56px;height:56px;border:0;background:linear-gradient(135deg,#a83dff,#6520b9);box-shadow:0 0 28px rgba(163,55,255,.35)}
-.play-btn svg{width:22px;height:22px;fill:#fff}
-.heart-btn{width:40px;height:40px;border:1px solid rgba(255,255,255,.12);background:rgba(151,45,255,.08);font-size:20px}
-.heart-btn.liked,.heart-btn.active{color:#ff72db}
-.volume{width:105px;accent-color:#a83dff}
-.status{margin-top:9px;font-size:9px;letter-spacing:1.4px;color:#927fa1;font-weight:800}
-.next-section{border-left:1px solid var(--line);padding-left:24px;display:flex;flex-direction:column;justify-content:center;min-width:0}
-.next-label{font-size:11px;letter-spacing:2px;color:#a98cbf;font-weight:900;margin-bottom:13px}
-.next-card{display:grid;grid-template-columns:88px minmax(0,1fr);gap:14px;align-items:center;min-width:0}
-.next-card img{width:88px;height:88px;border-radius:17px;object-fit:cover;background:#170d22;border:1px solid rgba(255,255,255,.08)}
-.next-title{font-size:22px;line-height:1.06;font-weight:900;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.next-artist{margin-top:7px;color:var(--muted);font-size:13px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.next-time{margin-top:10px;color:#d9c9e4;font-size:11px;font-weight:800}
-.next-note{margin-top:17px;padding-top:14px;border-top:1px solid var(--line);font-size:10px;color:#80728b}
-.syncbar{display:grid;grid-template-columns:1fr auto;align-items:center;gap:12px;margin:0 28px 22px;padding:13px 16px;border:1px solid rgba(177,89,255,.20);border-radius:14px;background:rgba(7,4,13,.48);color:#c9c0d2;font-size:11px}.sync-left{display:flex;align-items:center;gap:8px}.sync-dot{width:8px;height:8px;border-radius:50%;background:#31d17b;box-shadow:0 0 8px rgba(49,209,123,.5)}
-@media(max-width:760px){body{padding:8px}.radio-player{width:calc(100vw - 16px);border-radius:22px}.player-inner{display:block;padding:14px}.current-section{display:block;text-align:center}.cover-wrap{width:105px;height:105px;margin:0 auto 12px}.live-indicator{justify-content:center}.current-title{font-size:22px}.current-artist{font-size:14px}.meta-row,.controls{justify-content:center}.volume-wrap{display:none}.next-section{border-left:0;border-top:1px solid var(--line);padding:14px 0 0;margin-top:15px}.next-card{grid-template-columns:60px minmax(0,1fr)}.next-card img{width:60px;height:60px}.next-title{font-size:17px}.syncbar{margin:0 14px 14px;font-size:9px}}
+.cover-wrap img{width:100%;height:100%;display:block;object-fit:cover;border-radius:21px;background:#160d20}.track-info{min-width:0;flex:1}.eyebrow{font-size:11px;letter-spacing:2px;color:#b99ccf;font-weight:800;margin-bottom:8px}.live-indicator{display:flex;align-items:center;gap:7px;margin-bottom:9px;font-size:10px;font-weight:900;letter-spacing:1.6px}.live-indicator i{width:8px;height:8px;border-radius:50%;background:#ff3b4f;box-shadow:0 0 8px rgba(255,59,79,.65);animation:blink 1s ease-in-out infinite}@keyframes blink{50%{opacity:.28;transform:scale(.8)}}h1,h2,p{margin:0}.current-title{font-size:25px;line-height:1.08;font-weight:900;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.current-artist{margin-top:8px;color:var(--muted);font-size:16px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.meta-row{display:flex;align-items:center;gap:8px;margin-top:12px;color:#c8bed1;font-size:12px}.meta-row strong{color:#fff}.controls{display:flex;align-items:center;gap:12px;margin-top:16px}.play-btn,.heart-btn{display:grid;place-items:center;border-radius:50%;cursor:pointer;color:#fff}.play-btn{width:56px;height:56px;border:0;background:linear-gradient(135deg,#a83dff,#6520b9);box-shadow:0 0 28px rgba(163,55,255,.35)}.play-btn svg{width:22px;height:22px;fill:#fff}.heart-btn{width:40px;height:40px;border:1px solid rgba(255,255,255,.12);background:rgba(151,45,255,.08);font-size:20px}.heart-btn.liked,.heart-btn.active{color:#ff72db}.volume{width:105px;accent-color:#a83dff}.status{margin-top:9px;font-size:9px;letter-spacing:1.4px;color:#927fa1;font-weight:800}.next-section{border-left:1px solid var(--line);padding-left:24px;display:flex;flex-direction:column;justify-content:center;min-width:0}.next-label{font-size:11px;letter-spacing:2px;color:#a98cbf;font-weight:900;margin-bottom:13px}.next-card{display:grid;grid-template-columns:88px minmax(0,1fr);gap:14px;align-items:center;min-width:0}.next-card img{width:88px;height:88px;border-radius:17px;object-fit:cover;background:#170d22;border:1px solid rgba(255,255,255,.08)}.next-title{font-size:22px;line-height:1.06;font-weight:900;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.next-artist{margin-top:7px;color:var(--muted);font-size:13px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.next-time{margin-top:10px;color:#d9c9e4;font-size:11px;font-weight:800}.next-note{margin-top:17px;padding-top:14px;border-top:1px solid var(--line);font-size:10px;color:#80728b}.syncbar{display:grid;grid-template-columns:1fr auto;align-items:center;gap:12px;margin:0 28px 22px;padding:13px 16px;border:1px solid rgba(177,89,255,.20);border-radius:14px;background:rgba(7,4,13,.48);color:#c9c0d2;font-size:11px}.sync-left{display:flex;align-items:center;gap:8px}.sync-dot{width:8px;height:8px;border-radius:50%;background:#31d17b;box-shadow:0 0 8px rgba(49,209,123,.5)}
 </style>
-<script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-app-compat.js"></script>
-<script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-auth-compat.js"></script>
-<script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-firestore-compat.js"></script>
 </head>
 <body>
-<section class="radio-player" id="radioPlayer" aria-label="Player VM RADIO">
-  <div class="player-inner">
-    <div class="current-section">
-      <div class="cover-wrap"><img id="currentCover" data-current-cover alt="Pochette du titre actuel"></div>
-      <div class="track-info">
-        <div class="eyebrow">VM RADIO • EN DIRECT</div>
-        <div class="live-indicator"><i></i><span>EN DIRECT</span></div>
-        <h1 class="current-title" id="currentTitle" data-current-title>Chargement…</h1>
-        <p class="current-artist" id="currentArtist" data-current-artist>VM RADIO</p>
-        <div class="meta-row"><span>Diffusion</span><strong id="broadcastTime" data-current-time>--:--</strong></div>
-        <div class="controls">
-          <button class="play-btn" id="playBtn" type="button" aria-label="Écouter VM RADIO"><svg viewBox="0 0 24 24"><path id="playPausePath" d="M8 5.2v13.6L19 12 8 5.2z"/></svg></button>
-          <button class="heart-btn" data-heart type="button" aria-label="J'aime">♥</button>
-          <div class="volume-wrap"><input class="volume" id="volume" type="range" min="0" max="1" step=".01" value=".85" aria-label="Volume"></div>
-        </div>
-        <div class="status" id="statusText">PRÊT À ÉCOUTER</div>
-      </div>
-    </div>
-    <aside class="next-section">
-      <div class="next-label">TITRE SUIVANT</div>
-      <div class="next-card">
-        <img id="nextCover" data-next-cover alt="Pochette du prochain titre">
-        <div><h2 class="next-title" id="nextTitle" data-next-title>Chargement…</h2><p class="next-artist" id="nextArtist" data-next-artist>Artiste</p><div class="next-time">Diffusion prévue à <span id="nextTime" data-next-time>--:--</span></div></div>
-      </div>
-      <p class="next-note">Données synchronisées directement avec VM RADIO.</p>
-    </aside>
-  </div>
-  <div class="syncbar"><div class="sync-left"><span class="sync-dot"></span><span>Player synchronisé avec VM RADIO</span></div><div id="vmPlayerClock">--:--:--</div></div>
-</section>
-<script src="vm-radio-flux-central.js?v=7"></script>
-<script>
-(function(){
-  const clock=document.getElementById('vmPlayerClock');
-  const fmt=new Intl.DateTimeFormat('fr-FR',{timeZone:'Europe/Paris',hour:'2-digit',minute:'2-digit',second:'2-digit',hour12:false});
-  function tick(){if(clock)clock.textContent=fmt.format(new Date())} tick(); setInterval(tick,1000);
-  document.querySelector('[data-heart]')?.addEventListener('click',e=>e.currentTarget.classList.toggle('liked'));
-})();
-</script>
+<section class="radio-player" id="radioPlayer" aria-label="Player VM RADIO"><div class="player-inner"><div class="current-section"><div class="cover-wrap"><img id="currentCover" data-current-cover alt="Pochette du titre actuel"></div><div class="track-info"><div class="eyebrow">VM RADIO • EN DIRECT</div><div class="live-indicator"><i></i><span>EN DIRECT</span></div><h1 class="current-title" id="currentTitle" data-current-title>Chargement…</h1><p class="current-artist" id="currentArtist" data-current-artist>VM RADIO</p><div class="meta-row"><span>Diffusion</span><strong id="broadcastTime" data-current-time>--:--</strong></div><div class="controls"><button class="play-btn" id="playBtn" type="button" aria-label="Écouter VM RADIO"><svg viewBox="0 0 24 24"><path id="playPausePath" d="M8 5.2v13.6L19 12 8 5.2z"/></svg></button><button class="heart-btn" data-heart type="button" aria-label="J'aime">♥</button><div class="volume-wrap"><input class="volume" id="volume" type="range" min="0" max="1" step=".01" value=".85" aria-label="Volume"></div></div><div class="status" id="statusText">PRÊT À ÉCOUTER</div></div></div><aside class="next-section"><div class="next-label">TITRE SUIVANT</div><div class="next-card"><img id="nextCover" data-next-cover alt="Pochette du prochain titre"><div><h2 class="next-title" id="nextTitle" data-next-title>Chargement…</h2><p class="next-artist" id="nextArtist" data-next-artist>Artiste</p><div class="next-time">Diffusion prévue à <span id="nextTime" data-next-time>--:--</span></div></div></div><p class="next-note">Données synchronisées directement avec VM RADIO.</p></aside></div><div class="syncbar"><div class="sync-left"><span class="sync-dot"></span><span>Player synchronisé avec VM RADIO</span></div><div id="vmPlayerClock">--:--:--</div></div></section>
+<audio id="radioAudio" preload="none" playsinline src="https://radio.vmradio.fr/listen/vm_radio/radio.mp3"></audio>
+<script src="vm-radio-flux-central.js?v=8"></script>
+<script>(function(){const clock=document.getElementById('vmPlayerClock');const fmt=new Intl.DateTimeFormat('fr-FR',{timeZone:'Europe/Paris',hour:'2-digit',minute:'2-digit',second:'2-digit',hour12:false});function tick(){if(clock)clock.textContent=fmt.format(new Date())}tick();setInterval(tick,1000);document.querySelector('[data-heart]')?.addEventListener('click',e=>e.currentTarget.classList.toggle('liked'))})();</script>
 </body>
 </html>
