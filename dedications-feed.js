@@ -26,6 +26,30 @@
     });
   }
 
+
+  function deviceId() {
+    const key = "vmradio_dedication_device_v1";
+    try {
+      const existing = localStorage.getItem(key) || "";
+      if (/^ded_device_[A-Za-z0-9_-]{12,96}$/.test(existing)) return existing;
+      const random = (crypto && typeof crypto.randomUUID === "function")
+        ? crypto.randomUUID().replace(/-/g, "")
+        : Date.now().toString(36) + Math.random().toString(36).slice(2);
+      const value = "ded_device_" + Date.now().toString(36) + "_" + random.slice(0, 24);
+      localStorage.setItem(key, value);
+      return value;
+    } catch (error) {
+      return "ded_device_session_" + Date.now().toString(36) + Math.random().toString(36).slice(2, 18);
+    }
+  }
+
+  function clientId() {
+    const random = (crypto && typeof crypto.randomUUID === "function")
+      ? crypto.randomUUID().replace(/-/g, "")
+      : Date.now().toString(36) + Math.random().toString(36).slice(2);
+    return "ded_client_" + Date.now().toString(36) + "_" + random.slice(0, 24);
+  }
+
   function normalize(items) {
     return (Array.isArray(items) ? items : [])
       .filter(function (item) {
@@ -111,9 +135,131 @@
     });
   }
 
+
+  function renderLatest() {
+    const list = document.getElementById("publishedDedicationsList");
+    if (!list) return;
+    const recent = rows.slice(0, 10);
+    if (!recent.length) {
+      list.innerHTML = '<div class="empty">Aucune dédicace pour le moment.</div>';
+      return;
+    }
+    list.innerHTML = recent.map(function (item) {
+      let date = "";
+      if (item.createdAt) {
+        const value = new Date(item.createdAt);
+        if (!Number.isNaN(value.getTime())) {
+          date = value.toLocaleString("fr-FR", {
+            day: "2-digit",
+            month: "2-digit",
+            hour: "2-digit",
+            minute: "2-digit"
+          });
+        }
+      }
+      return '<div class="recent-item recent-dedication">' +
+        '<div class="recent-head recent-dedication-head"><b>💜 ' +
+        escapeHtml(item.name) +
+        (item.to ? " → " + escapeHtml(item.to) : "") +
+        '</b><span class="recent-time">' + escapeHtml(date) + '</span></div>' +
+        '<div class="recent-msg recent-dedication-message">' + escapeHtml(item.message) + '</div>' +
+        (item.song ? '<div class="recent-dedication-song">🎵 ' + escapeHtml(item.song) + '</div>' : "") +
+        '</div>';
+    }).join("");
+  }
+
+  function formMessage(value) {
+    const feedback = document.getElementById("dedicationFeedback");
+    if (feedback) feedback.textContent = value;
+  }
+
+  async function submit(data) {
+    const payload = Object.assign({}, data || {}, {
+      clientId: clientId(),
+      deviceId: deviceId(),
+      source: String((data && data.source) || (APP_MODE ? "app" : "site"))
+    });
+    const controller = new AbortController();
+    const timeout = window.setTimeout(function () { controller.abort(); }, 15000);
+    try {
+      const response = await fetch(API, {
+        method: "POST",
+        mode: "cors",
+        cache: "no-store",
+        credentials: "omit",
+        headers: {
+          "Content-Type": "text/plain;charset=UTF-8",
+          "Accept": "application/json"
+        },
+        body: JSON.stringify(payload),
+        signal: controller.signal
+      });
+      const result = await response.json().catch(function () { return {}; });
+      if (!response.ok || result.ok === false) {
+        throw new Error(result.error || ("API HTTP " + response.status));
+      }
+      await refresh();
+      return result;
+    } finally {
+      window.clearTimeout(timeout);
+    }
+  }
+
+  function bindForm() {
+    const form = document.getElementById("dedicationForm");
+    if (!form || form.dataset.vmDedicationCentralBound === "1") return;
+    form.dataset.vmDedicationCentralBound = "1";
+    const message = document.getElementById("dedMessage");
+    const count = document.getElementById("charCount");
+    const button = document.getElementById("dedicationSubmit");
+    if (message && count) {
+      count.textContent = String(message.value.length);
+      message.addEventListener("input", function () {
+        count.textContent = String(message.value.length);
+      });
+    }
+    form.addEventListener("submit", async function (event) {
+      event.preventDefault();
+      const name = String(document.getElementById("dedName")?.value || "").trim();
+      const to = String(document.getElementById("dedTo")?.value || "").trim();
+      const text = String(message?.value || "").trim();
+      if (!name || !text) {
+        formMessage("Merci de remplir votre prénom / pseudo et votre message.");
+        return;
+      }
+      if (text.length > 240) {
+        formMessage("La dédicace est limitée à 240 caractères.");
+        return;
+      }
+      if (button) {
+        button.disabled = true;
+        button.dataset.vmOriginalText = button.textContent || "";
+        button.textContent = "ENVOI...";
+      }
+      formMessage("Envoi de votre dédicace…");
+      try {
+        await submit({ name: name, to: to, message: text, song: "" });
+        form.reset();
+        if (count) count.textContent = "0";
+        formMessage("✓ Votre dédicace a bien été envoyée !");
+      } catch (error) {
+        console.error("VM RADIO — envoi de la dédicace", error);
+        formMessage(error && error.name === "AbortError"
+          ? "Le serveur met trop de temps à répondre. Réessaie dans un instant."
+          : (error.message || "Impossible d’envoyer la dédicace."));
+      } finally {
+        if (button) {
+          button.disabled = false;
+          button.textContent = button.dataset.vmOriginalText || "♡ ENVOYER LA DÉDICACE";
+        }
+      }
+    });
+  }
+
   function render() {
     renderSite();
     if (APP_MODE) renderApp();
+    renderLatest();
   }
 
   function store(items) {
@@ -190,6 +336,7 @@
   window.addEventListener("focus", refresh);
   window.addEventListener("online", refresh);
   window.addEventListener("vmradio:pagechange", function () {
+    bindForm();
     render();
     refresh();
   });
@@ -202,11 +349,12 @@
     subtree: true
   });
 
-  window.__vmradioCentralDedicationsFeed = { api: API, refresh: refresh, subscribe: subscribe, get: function () { return rows.slice(); } };
+  window.__vmradioCentralDedicationsFeed = { api: API, refresh: refresh, submit: submit, subscribe: subscribe, get: function () { return rows.slice(); } };
   if (!window.vmradioDedicacesCentral) window.vmradioDedicacesCentral = window.__vmradioCentralDedicationsFeed;
 
   function boot() {
     restore();
+    bindForm();
     refresh();
     schedule();
   }
