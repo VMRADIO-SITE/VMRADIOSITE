@@ -1072,50 +1072,7 @@ header ~ main h1:first-child {
     font-size:11px !important;
   }
 }
-</style><script id="vmradio-central-dedication-feed">
-(function(){
-"use strict";
-const API="https://admin.vmradio.fr/api/dedications";
-const POLL_MS=5000;
-let items=[];
-const subscribers=new Set();
-function esc(v){return String(v??"").replace(/[&<>"']/g,function(c){return {"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c];});}
-function renderBanner(rows){
-  const track=document.querySelector(".vm-common-dedication-track");
-  if(!track)return;
-  const html=rows.length?rows.slice(0,30).map(function(d){return '<span class="vm-common-dedication-message">💜 '+esc(d.name)+(d.to?' → '+esc(d.to):'')+' : '+esc(d.message)+'</span>';}).join(""):'<span class="vm-common-dedication-message">♡ Aucune dédicace pour le moment.</span>';
-  if(track.dataset.vmCentralText===html)return;
-  track.dataset.vmCentralText=html;
-  track.classList.remove("is-scrolling");
-  track.innerHTML=html;
-  void track.offsetWidth;
-  if(rows.length)track.classList.add("is-scrolling");
-}
-function publish(rows){
-  items=(Array.isArray(rows)?rows:[]).filter(function(x){return x&&x.name&&x.message;}).sort(function(a,b){return (Date.parse(b.createdAt)||0)-(Date.parse(a.createdAt)||0);});
-  renderBanner(items);
-  subscribers.forEach(function(fn){try{fn(items.slice());}catch(error){console.error(error);}});
-  window.dispatchEvent(new CustomEvent("vmradio:dedications",{detail:items.slice()}));
-}
-async function refresh(){
-  const response=await fetch(API+"?t="+Date.now(),{cache:"no-store",credentials:"omit",headers:{Accept:"application/json"}});
-  const payload=await response.json().catch(function(){return {};});
-  if(!response.ok||!payload.ok)throw new Error(payload.error||("API HTTP "+response.status));
-  publish(payload.data||[]);
-  return items.slice();
-}
-function subscribe(fn){subscribers.add(fn);if(items.length)fn(items.slice());return function(){subscribers.delete(fn);};}
-window.vmradioDedicacesCentral={refresh:refresh,subscribe:subscribe,get:function(){return items.slice();},api:API};
-function start(){
-  refresh().catch(function(error){console.warn("VM RADIO — dédicaces centrales",error);renderBanner([]);});
-  if(window.__vmSiteDedicationsTimer)clearInterval(window.__vmSiteDedicationsTimer);
-  window.__vmSiteDedicationsTimer=setInterval(function(){refresh().catch(function(error){console.warn("VM RADIO — synchronisation dédicaces",error);});},POLL_MS);
-}
-if(document.readyState==="loading")document.addEventListener("DOMContentLoaded",start,{once:true});else start();
-window.addEventListener("focus",function(){refresh().catch(function(){});});
-document.addEventListener("visibilitychange",function(){if(!document.hidden)refresh().catch(function(){});});
-})();
-</script><style>
+</style><style>
 /* VM RADIO — VITESSE MOBILE FORCÉE DE LA BANNIÈRE */
 @media screen and (max-width:700px){
   .vm-common-dedication-track.is-scrolling{
@@ -1447,124 +1404,7 @@ document.addEventListener("visibilitychange",function(){if(!document.hidden)refr
 </footer><div class="before-footer-space"></div>
 </div>
 <div class="before-footer-space"></div>
-<script id="vm-single-source-dedications">
-(function(){
-"use strict";
-const esc=function(v){return String(v??"").replace(/[&<>"']/g,function(c){return {"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c];});};
-function dedicationDeviceId(){
-  const key="vmradio_dedication_device_v1";
-  try{
-    const existing=localStorage.getItem(key)||"";
-    if(/^ded_device_[A-Za-z0-9_-]{12,96}$/.test(existing))return existing;
-    const random=(globalThis.crypto&&typeof globalThis.crypto.randomUUID==="function")
-      ?globalThis.crypto.randomUUID().replace(/-/g,"")
-      :(Date.now().toString(36)+Math.random().toString(36).slice(2));
-    const value="ded_device_"+Date.now().toString(36)+"_"+random.slice(0,24);
-    localStorage.setItem(key,value);
-    return value;
-  }catch(error){
-    return "ded_device_session_"+Date.now().toString(36)+Math.random().toString(36).slice(2,18);
-  }
-}
-function dedicationClientId(){
-  const random=(globalThis.crypto&&typeof globalThis.crypto.randomUUID==="function")
-    ?globalThis.crypto.randomUUID().replace(/-/g,"")
-    :(Date.now().toString(36)+Math.random().toString(36).slice(2));
-  return "ded_client_"+Date.now().toString(36)+"_"+random.slice(0,24);
-}
-async function postCentralDedication(api,data){
-  const clientId=dedicationClientId();
-  const body=JSON.stringify(Object.assign({},data,{clientId:clientId,deviceId:dedicationDeviceId()}));
-  let networkError=null;
-  try{
-    const response=await fetch(api,{method:"POST",cache:"no-store",credentials:"omit",keepalive:true,headers:{"Content-Type":"text/plain;charset=UTF-8",Accept:"application/json"},body:body});
-    const payload=await response.json().catch(function(){return {};});
-    if(!response.ok||!payload.ok){
-      const error=new Error(payload.error||("API HTTP "+response.status));
-      error.vmHttp=true;
-      throw error;
-    }
-    return payload;
-  }catch(error){
-    if(error&&error.vmHttp)throw error;
-    networkError=error;
-  }
-  try{
-    await fetch(api,{method:"POST",mode:"no-cors",cache:"no-store",credentials:"omit",keepalive:true,headers:{"Content-Type":"text/plain;charset=UTF-8"},body:body});
-    await new Promise(function(resolve){setTimeout(resolve,900);});
-    const verify=await fetch(api+"?t="+Date.now(),{cache:"no-store",credentials:"omit",headers:{Accept:"application/json"}});
-    const payload=await verify.json().catch(function(){return {};});
-    const rows=Array.isArray(payload.data)?payload.data:[];
-    const saved=rows.find(function(row){return row&&row.id===clientId;});
-    if(verify.ok&&payload.ok&&saved)return {ok:true,data:saved,recovered:true};
-  }catch(error){
-    console.warn("VM RADIO — tentative de secours dédicace",error);
-  }
-  throw networkError||new Error("Impossible de joindre le service des dédicaces.");
-}
-function render(rows){
-  const list=document.getElementById("publishedDedicationsList");
-  if(!list)return;
-  rows=(Array.isArray(rows)?rows:[]).slice(0,10);
-  if(!rows.length){list.innerHTML='<div class="empty">Aucune dédicace pour le moment.</div>';return;}
-  list.innerHTML=rows.map(function(d){
-    let date="";
-    if(d.createdAt){
-      const value=new Date(d.createdAt);
-      if(!Number.isNaN(value.getTime()))date=value.toLocaleString("fr-FR",{day:"2-digit",month:"2-digit",hour:"2-digit",minute:"2-digit"});
-    }
-    return '<div class="recent-item"><div class="recent-head"><b>💜 '+esc(d.name)+(d.to?' → '+esc(d.to):'')+'</b><span class="recent-time">'+esc(date)+'</span></div><div class="recent-msg">'+esc(d.message)+'</div></div>';
-  }).join("");
-}
-function bind(){
-  const form=document.getElementById("dedicationForm");
-  if(!form||form.dataset.vmCentralBound==="1")return;
-  form.dataset.vmCentralBound="1";
-  const name=document.getElementById("dedName");
-  const to=document.getElementById("dedTo");
-  const msg=document.getElementById("dedMessage");
-  const count=document.getElementById("charCount");
-  const feedback=document.getElementById("dedicationFeedback");
-  const button=document.getElementById("dedicationSubmit");
-  if(msg&&count)msg.addEventListener("input",function(){count.textContent=String(msg.value.length);});
-  form.addEventListener("submit",async function(event){
-    event.preventDefault();
-    const n=(name?.value||"").trim();
-    const recipient=(to?.value||"").trim();
-    const message=(msg?.value||"").trim();
-    if(!n||!message){if(feedback)feedback.textContent="Merci de remplir votre prénom/pseudo et votre message.";return;}
-    if(message.length>240)return;
-    if(button){button.disabled=true;button.textContent="ENVOI...";}
-    try{
-      const central=window.vmradioDedicacesCentral;
-      const api=central?.api||"https://admin.vmradio.fr/api/dedications";
-      await postCentralDedication(api,{name:n,to:recipient,message:message,song:"",source:"site"});
-      form.reset();
-      if(count)count.textContent="0";
-      if(feedback)feedback.textContent="✓ Votre dédicace a bien été envoyée !";
-      if(central)await central.refresh();
-    }catch(error){
-      console.error("VM RADIO — envoi dédicace centrale",error);
-      if(feedback)feedback.textContent=error.message||"Impossible d’envoyer la dédicace.";
-    }finally{
-      if(button){button.disabled=false;button.textContent="♡ ENVOYER LA DÉDICACE";}
-    }
-  });
-}
-function init(){
-  bind();
-  const central=window.vmradioDedicacesCentral;
-  if(central){
-    if(window.__vmRecentCentralUnsub)window.__vmRecentCentralUnsub();
-    window.__vmRecentCentralUnsub=central.subscribe(render);
-    render(central.get());
-    central.refresh().catch(function(){});
-  }
-}
-if(document.readyState==="loading")document.addEventListener("DOMContentLoaded",init,{once:true});else init();
-window.addEventListener("vmradio:pagechange",function(){setTimeout(init,0);});
-})();
-</script>
+
 <div id="vmRadioSitePlayer" aria-label="Lecteur VM RADIO">
   <iframe scrolling="no" src="player.html" title="Player VM RADIO" allow="autoplay"></iframe>
 </div>
@@ -1663,4 +1503,6 @@ window.addEventListener("vmradio:pagechange",function(){setTimeout(init,0);});
   new MutationObserver(fix).observe(document.body,{childList:true,subtree:true});
 })();
 </script>
+
+<script src="dedications-feed.js?v=4" defer></script>
 </body></html>
