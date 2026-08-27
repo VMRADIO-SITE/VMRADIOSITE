@@ -20,6 +20,6 @@ btn.addEventListener('click',async function(e){e.preventDefault();e.stopPropagat
 audio.addEventListener('play',sync);audio.addEventListener('playing',sync);audio.addEventListener('pause',sync);audio.addEventListener('waiting',()=>status.textContent='CONNEXION…');audio.addEventListener('error',()=>{status.textContent='FLUX INDISPONIBLE';console.error('VM RADIO direct mobile audio error',audio.error?.code,audio.error?.message)});window.VMRadioPlayer={play:()=>audio.play(),pause:()=>audio.pause(),stream:STREAM,audio};sync();
 })();
 </script>
-<script src="vm-radio-flux-central.js?v=20260827-heure4"></script>
+<script src="vm-radio-flux-central.js?v=20260827-requester1"></script>
 <script>(function(){const clock=document.getElementById('vmPlayerClock');const fmt=new Intl.DateTimeFormat('fr-FR',{timeZone:'Europe/Paris',hour:'2-digit',minute:'2-digit',second:'2-digit',hour12:false});function tick(){if(clock)clock.textContent=fmt.format(new Date())}tick();setInterval(tick,1000);document.querySelector('[data-heart]')?.addEventListener('click',e=>e.currentTarget.classList.toggle('liked'))})();</script>
 </body></html>
