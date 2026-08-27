@@ -1451,6 +1451,42 @@ document.addEventListener("visibilitychange",function(){if(!document.hidden)refr
 (function(){
 "use strict";
 const esc=function(v){return String(v??"").replace(/[&<>"']/g,function(c){return {"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c];});};
+function dedicationClientId(){
+  const random=(globalThis.crypto&&typeof globalThis.crypto.randomUUID==="function")
+    ?globalThis.crypto.randomUUID().replace(/-/g,"")
+    :(Date.now().toString(36)+Math.random().toString(36).slice(2));
+  return "ded_client_"+Date.now().toString(36)+"_"+random.slice(0,24);
+}
+async function postCentralDedication(api,data){
+  const clientId=dedicationClientId();
+  const body=JSON.stringify(Object.assign({},data,{clientId:clientId}));
+  let networkError=null;
+  try{
+    const response=await fetch(api,{method:"POST",cache:"no-store",credentials:"omit",keepalive:true,headers:{"Content-Type":"text/plain;charset=UTF-8",Accept:"application/json"},body:body});
+    const payload=await response.json().catch(function(){return {};});
+    if(!response.ok||!payload.ok){
+      const error=new Error(payload.error||("API HTTP "+response.status));
+      error.vmHttp=true;
+      throw error;
+    }
+    return payload;
+  }catch(error){
+    if(error&&error.vmHttp)throw error;
+    networkError=error;
+  }
+  try{
+    await fetch(api,{method:"POST",mode:"no-cors",cache:"no-store",credentials:"omit",keepalive:true,headers:{"Content-Type":"text/plain;charset=UTF-8"},body:body});
+    await new Promise(function(resolve){setTimeout(resolve,900);});
+    const verify=await fetch(api+"?t="+Date.now(),{cache:"no-store",credentials:"omit",headers:{Accept:"application/json"}});
+    const payload=await verify.json().catch(function(){return {};});
+    const rows=Array.isArray(payload.data)?payload.data:[];
+    const saved=rows.find(function(row){return row&&row.id===clientId;});
+    if(verify.ok&&payload.ok&&saved)return {ok:true,data:saved,recovered:true};
+  }catch(error){
+    console.warn("VM RADIO — tentative de secours dédicace",error);
+  }
+  throw networkError||new Error("Impossible de joindre le service des dédicaces.");
+}
 function render(rows){
   const list=document.getElementById("publishedDedicationsList");
   if(!list)return;
@@ -1487,9 +1523,7 @@ function bind(){
     try{
       const central=window.vmradioDedicacesCentral;
       const api=central?.api||"https://admin.vmradio.fr/api/dedications";
-      const response=await fetch(api,{method:"POST",cache:"no-store",credentials:"omit",headers:{"Content-Type":"text/plain;charset=UTF-8",Accept:"application/json"},body:JSON.stringify({name:n,to:recipient,message:message,song:"",source:"site"})});
-      const payload=await response.json().catch(function(){return {};});
-      if(!response.ok||!payload.ok)throw new Error(payload.error||("API HTTP "+response.status));
+      await postCentralDedication(api,{name:n,to:recipient,message:message,song:"",source:"site"});
       form.reset();
       if(count)count.textContent="0";
       if(feedback)feedback.textContent="✓ Votre dédicace a bien été envoyée !";
