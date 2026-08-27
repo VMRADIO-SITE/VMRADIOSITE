@@ -140,32 +140,37 @@
     const list = document.getElementById("publishedDedicationsList");
     if (!list) return;
     const recent = rows.slice(0, 10);
-    if (!recent.length) {
-      list.innerHTML = '<div class="empty">Aucune dédicace pour le moment.</div>';
-      return;
-    }
-    list.innerHTML = recent.map(function (item) {
-      let date = "";
-      if (item.createdAt) {
-        const value = new Date(item.createdAt);
-        if (!Number.isNaN(value.getTime())) {
-          date = value.toLocaleString("fr-FR", {
-            day: "2-digit",
-            month: "2-digit",
-            hour: "2-digit",
-            minute: "2-digit"
-          });
+    let html = '<div class="empty">Aucune dédicace pour le moment.</div>';
+
+    if (recent.length) {
+      html = recent.map(function (item) {
+        let date = "";
+        if (item.createdAt) {
+          const value = new Date(item.createdAt);
+          if (!Number.isNaN(value.getTime())) {
+            date = value.toLocaleString("fr-FR", {
+              day: "2-digit",
+              month: "2-digit",
+              hour: "2-digit",
+              minute: "2-digit"
+            });
+          }
         }
-      }
-      return '<div class="recent-item recent-dedication">' +
-        '<div class="recent-head recent-dedication-head"><b>💜 ' +
-        escapeHtml(item.name) +
-        (item.to ? " → " + escapeHtml(item.to) : "") +
-        '</b><span class="recent-time">' + escapeHtml(date) + '</span></div>' +
-        '<div class="recent-msg recent-dedication-message">' + escapeHtml(item.message) + '</div>' +
-        (item.song ? '<div class="recent-dedication-song">🎵 ' + escapeHtml(item.song) + '</div>' : "") +
-        '</div>';
-    }).join("");
+        return '<div class="recent-item recent-dedication">' +
+          '<div class="recent-head recent-dedication-head"><b>💜 ' +
+          escapeHtml(item.name) +
+          (item.to ? " → " + escapeHtml(item.to) : "") +
+          '</b><span class="recent-time">' + escapeHtml(date) + '</span></div>' +
+          '<div class="recent-msg recent-dedication-message">' + escapeHtml(item.message) + '</div>' +
+          (item.song ? '<div class="recent-dedication-song">🎵 ' + escapeHtml(item.song) + '</div>' : "") +
+          '</div>';
+      }).join("");
+    }
+
+    // Évite une boucle MutationObserver → render → mutation → render.
+    if (list.dataset.vmCentralText === html) return;
+    list.dataset.vmCentralText = html;
+    list.innerHTML = html;
   }
 
   function formMessage(value) {
