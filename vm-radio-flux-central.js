@@ -12,7 +12,7 @@ const DIRECT_PLAYER=window.__VMRADIO_DIRECT_PLAYER__===true;
 window.__VMRADIO_NOWPLAYING_URL__=ENGINE;
 const first=(...v)=>v.find(x=>x!==undefined&&x!==null&&String(x).trim()!=='')??'';
 const cap=v=>{const s=String(v??'').trim();return s?s.charAt(0).toLocaleUpperCase('fr-FR')+s.slice(1):''};
-const clock=v=>{if(!v)return'--:--';const d=typeof v==='number'?new Date(v*1000):new Date(v);return Number.isNaN(d.getTime())?'--:--':d.toLocaleTimeString('fr-FR',{hour:'2-digit',minute:'2-digit'})};
+const clock=v=>{if(!v)return'--:--';const d=typeof v==='number'?new Date(v*1000):new Date(v);return Number.isNaN(d.getTime())?'--:--':d.toLocaleTimeString('fr-FR',{timeZone:'Europe/Paris',hour:'2-digit',minute:'2-digit'})};
 function track(song,meta){if(!song||typeof song!=='object')return null;const title=first(song.title,song.name);if(!title)return null;const playlist=String(meta?.playlist||'').toLowerCase();return{id:String(first(song.id,song.track_id,title)),title:cap(title),artist:String(first(song.artist,song.artist_name)||DEFAULT_ARTIST).trim(),cover:String(first(song.art,song.cover,song.cover_url,song.artwork,song.artwork_url)||''),time:first(meta?.played_at,meta?.started_at,meta?.time),duration:Number(first(meta?.duration,song?.duration,0))||0,type:meta?.is_request===true?'request':playlist.includes('jingle')?'jingle':'music'}}
 async function getEngine(){const r=await fetch(ENGINE+'?_='+Date.now(),{cache:'no-store',credentials:'omit'});if(!r.ok)throw new Error('VM RADIO API '+r.status);return r.json()}
 function setText(sel,value){const v=String(value??'');document.querySelectorAll(sel).forEach(el=>{if(el.textContent!==v)el.textContent=v})}
