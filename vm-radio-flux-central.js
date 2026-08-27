@@ -1,4 +1,4 @@
-/* VM RADIO — source unique moteur + flux v10 */
+/* VM RADIO — source unique moteur + flux v11 */
 (function(){
 'use strict';
 const ENGINE='https://admin.vmradio.fr/api/radio/nowplaying';
@@ -6,9 +6,10 @@ const STREAM='https://radio.vmradio.fr/listen/vm_radio/radio.mp3';
 const DEFAULT_ARTIST='Music IA By Valentin';
 const REFRESH=1000;
 window.__VMRADIO_STREAM_URL__=STREAM;
-if(window.__VMRADIO_CENTRAL_V10__)return;
-window.__VMRADIO_CENTRAL_V10__=true;
+if(window.__VMRADIO_CENTRAL_V11__)return;
+window.__VMRADIO_CENTRAL_V11__=true;
 const DIRECT_PLAYER=window.__VMRADIO_DIRECT_PLAYER__===true;
+window.__VMRADIO_NOWPLAYING_URL__=ENGINE;
 const first=(...v)=>v.find(x=>x!==undefined&&x!==null&&String(x).trim()!=='')??'';
 const cap=v=>{const s=String(v??'').trim();return s?s.charAt(0).toLocaleUpperCase('fr-FR')+s.slice(1):''};
 const clock=v=>{if(!v)return'--:--';const d=typeof v==='number'?new Date(v*1000):new Date(v);return Number.isNaN(d.getTime())?'--:--':d.toLocaleTimeString('fr-FR',{hour:'2-digit',minute:'2-digit'})};
