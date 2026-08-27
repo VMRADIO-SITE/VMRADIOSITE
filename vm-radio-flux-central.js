@@ -20,9 +20,37 @@ function setImage(sel,value){if(!value)return;const v=String(value);document.que
 function protectImages(){const fix=el=>{if(el?.tagName!=='IMG')return;const ready=el.dataset.vmReadyCover;if(ready&&(el.getAttribute('src')||'')!==ready)el.setAttribute('src',ready)};new MutationObserver(list=>{for(const m of list)fix(m.target)}).observe(document.documentElement,{subtree:true,attributes:true,attributeFilter:['src']})}
 function nextBroadcastTime(current,next){if(next?.time)return next.time;if(!current?.time||!current?.duration)return'';const start=typeof current.time==='number'?new Date(current.time*1000):new Date(current.time);if(Number.isNaN(start.getTime()))return'';return new Date(start.getTime()+current.duration*1000).toISOString()}
 let lastCurrentKey='',lastNextKey='';
+
+function renderPrevious(items){
+  const previous=(items||[]).slice(0,3);
+  const key=previous.map(x=>[x.id,x.title,x.artist,x.cover,x.time].join('|')).join('||');
+  document.querySelectorAll('[data-previous]').forEach(box=>{
+    if(box.dataset.vmHistoryKey===key)return;
+    box.dataset.vmHistoryKey=key;
+    box.innerHTML='';
+    if(!previous.length){
+      const empty=document.createElement('p');
+      empty.className='vm-programme-previous-empty';
+      empty.textContent='Les derniers titres apparaîtront ici.';
+      box.appendChild(empty);
+      return;
+    }
+    previous.forEach(x=>{
+      const row=document.createElement('div');
+      row.className='vm-programme-previous-item';
+      row.innerHTML='<img alt=""><div class="previous-info"><strong class="previous-title"></strong><small class="previous-artist"></small><em class="previous-time"></em></div>';
+      const image=row.querySelector('img');
+      if(x.cover){image.src=x.cover;image.dataset.vmReadyCover=x.cover}
+      row.querySelector('.previous-title').textContent=x.title;
+      row.querySelector('.previous-artist').textContent=x.artist||DEFAULT_ARTIST;
+      row.querySelector('.previous-time').textContent=x.time?'Diffusé à '+clock(x.time):'';
+      box.appendChild(row);
+    });
+  });
+}
 function render(current,next,history){if(!current)return;const currentKey=[current.id,current.title,current.artist,current.cover,current.time].join('|');if(currentKey!==lastCurrentKey){lastCurrentKey=currentKey;setText('[data-current-title],#currentTitle,#title,#programCurrent,.current-title',current.title);setText('[data-current-artist],#currentArtist,#artist,.current-artist',current.artist);setText('[data-current-time],#broadcastTime,.current-time',clock(current.time));setImage('[data-current-cover],#currentCover,#cover,.current-cover,.cover-wrap img',current.cover);setText('[data-news-current]',current.title);setText('[data-news-current-artist]',current.artist);setText('[data-news-current-time]',clock(current.time));setImage('[data-news-current-cover]',current.cover);try{if('mediaSession'in navigator)navigator.mediaSession.metadata=new MediaMetadata({title:current.title||'VM RADIO',artist:current.artist||DEFAULT_ARTIST,album:'VM RADIO',artwork:current.cover?[{src:current.cover}]:[]})}catch(_){}}
 if(next){const nextAt=nextBroadcastTime(current,next);const nextKey=[next.id,next.title,next.artist,next.cover,nextAt].join('|');if(nextKey!==lastNextKey){lastNextKey=nextKey;setText('[data-next-title],#nextTitle,#programNext,.next-title',next.title);setText('[data-next-artist],#nextArtist,.next-artist',next.artist);setText('[data-next-time],#nextTime,.next-time',clock(nextAt));setImage('[data-next-cover],#nextCover,.next-cover,.next-card img',next.cover);setText('[data-news-next]',next.title);setText('[data-news-next-artist]',next.artist);setText('[data-news-next-time]',clock(nextAt));setImage('[data-news-next-cover]',next.cover)}}
-const previous=(history||[]).filter(x=>x&&x.id!==current.id&&x.type==='music').slice(0,3),last=previous[0];if(last){setText('[data-news-last]',last.title);setText('[data-news-last-artist]',last.artist);setText('[data-news-last-time]',clock(last.time));setImage('[data-news-last-cover]',last.cover)}}
+const previous=(history||[]).filter(x=>x&&x.id!==current.id&&x.type==='music').slice(0,3),last=previous[0];if(last){setText('[data-news-last]',last.title);setText('[data-news-last-artist]',last.artist);setText('[data-news-last-time]',clock(last.time));setImage('[data-news-last-cover]',last.cover)}renderPrevious(previous)}
 let refreshing=false;async function refresh(){if(refreshing)return;refreshing=true;try{const d=await getEngine();render(track(d?.now_playing?.song,d?.now_playing),track(d?.playing_next?.song,d?.playing_next),(Array.isArray(d?.song_history)?d.song_history:[]).map(x=>track(x?.song,x)).filter(Boolean))}catch(e){console.warn('VM RADIO moteur indisponible',e)}finally{refreshing=false}}
 function getStatus(){return document.getElementById('statusText')||document.querySelector('[data-player-status]')}
 function getAudio(){let a=document.getElementById('radioAudio');if(!a){a=document.createElement('audio');a.id='radioAudio';a.style.display='none';document.body.appendChild(a)}return a}
