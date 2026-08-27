@@ -1,4 +1,4 @@
-/* VM RADIO — source unique moteur + flux v11 */
+/* VM RADIO — source unique moteur + flux v12 */
 (function(){
 'use strict';
 const ENGINE='https://admin.vmradio.fr/api/radio/nowplaying';
@@ -6,8 +6,8 @@ const STREAM='https://radio.vmradio.fr/listen/vm_radio/radio.mp3';
 const DEFAULT_ARTIST='Music IA By Valentin';
 const REFRESH=1000;
 window.__VMRADIO_STREAM_URL__=STREAM;
-if(window.__VMRADIO_CENTRAL_V11__)return;
-window.__VMRADIO_CENTRAL_V11__=true;
+if(window.__VMRADIO_CENTRAL_V12__)return;
+window.__VMRADIO_CENTRAL_V12__=true;
 const DIRECT_PLAYER=window.__VMRADIO_DIRECT_PLAYER__===true;
 window.__VMRADIO_NOWPLAYING_URL__=ENGINE;
 const first=(...v)=>v.find(x=>x!==undefined&&x!==null&&String(x).trim()!=='')??'';
@@ -17,7 +17,7 @@ function track(song,meta){if(!song||typeof song!=='object')return null;const tit
 async function getEngine(){const r=await fetch(ENGINE+'?_='+Date.now(),{cache:'no-store',credentials:'omit'});if(!r.ok)throw new Error('VM RADIO API '+r.status);return r.json()}
 function setText(sel,value){const v=String(value??'');document.querySelectorAll(sel).forEach(el=>{if(el.textContent!==v)el.textContent=v})}
 function setImage(sel,value){if(!value)return;const v=String(value);document.querySelectorAll(sel).forEach(el=>{if(el.tagName!=='IMG')return;el.dataset.vmDesiredCover=v;if(el.dataset.vmReadyCover===v&&(el.getAttribute('src')||'')===v)return;if(el.dataset.vmLoadingCover===v)return;el.dataset.vmLoadingCover=v;const probe=new Image();probe.decoding='async';probe.onload=()=>{if(el.dataset.vmDesiredCover!==v)return;el.dataset.vmReadyCover=v;delete el.dataset.vmLoadingCover;if((el.getAttribute('src')||'')!==v)el.setAttribute('src',v)};probe.onerror=()=>{if(el.dataset.vmLoadingCover===v)delete el.dataset.vmLoadingCover};probe.src=v})}
-function renderRequester(kind,item){const current=kind==='current',requester=String(item?.requester||'').trim(),message=String(item?.message||'').trim(),text=requester?('Demandé par '+requester+(message?' · « '+message+' »':'')):(message?'Message auditeur : « '+message+' »':''),slot=current?'[data-current-requester]':'[data-next-requester]',anchorSelector=current?'[data-current-artist],#currentArtist,#artist,.current-artist,[data-news-current-artist]':'[data-next-artist],#nextArtist,.next-artist,[data-news-next-artist]',className='vm-requester-'+kind;setText(slot,text);document.querySelectorAll(anchorSelector).forEach(anchor=>{const parent=anchor.parentElement;if(!parent)return;if(parent.querySelector(slot))return;let label=Array.from(parent.children).find(el=>el.classList?.contains(className));if(!text){if(label)label.remove();return}if(!label){label=document.createElement('small');label.className=className;label.style.cssText='display:block;margin-top:5px;color:#c084fc;font-size:.82em;font-weight:700;line-height:1.35;max-width:100%;white-space:normal';anchor.insertAdjacentElement('afterend',label)}if(label.textContent!==text)label.textContent=text})}
+function renderRequester(kind,item){const current=kind==='current',requester=String(item?.requester||'').trim(),message=String(item?.message||'').trim(),text=requester?('Demandé par '+requester+(message?' · « '+message+' »':'')):(message?'Message auditeur : « '+message+' »':''),slot=current?'[data-current-requester]':'[data-next-requester]',anchorSelector=current?'[data-current-artist],#currentArtist,#artist,.current-artist,[data-news-current-artist]':'[data-next-artist],#nextArtist,.next-artist,[data-news-next-artist]',className='vm-requester-'+kind;document.querySelectorAll(slot).forEach(el=>{el.textContent=text;el.style.display=text?'block':'none'});document.querySelectorAll(anchorSelector).forEach(anchor=>{const parent=anchor.parentElement;if(!parent)return;if(parent.querySelector(slot))return;let label=Array.from(parent.children).find(el=>el.classList?.contains(className));if(!text){if(label)label.remove();return}if(!label){label=document.createElement('small');label.className=className;label.style.cssText='display:block;margin-top:5px;color:#c084fc;font-size:.82em;font-weight:700;line-height:1.35;max-width:100%;white-space:normal';anchor.insertAdjacentElement('afterend',label)}if(label.textContent!==text)label.textContent=text})}
 function protectImages(){const fix=el=>{if(el?.tagName!=='IMG')return;const ready=el.dataset.vmReadyCover;if(ready&&(el.getAttribute('src')||'')!==ready)el.setAttribute('src',ready)};new MutationObserver(list=>{for(const m of list)fix(m.target)}).observe(document.documentElement,{subtree:true,attributes:true,attributeFilter:['src']})}
 function nextBroadcastTime(current,next){if(next?.time)return next.time;if(!current?.time||!current?.duration)return'';const start=typeof current.time==='number'?new Date(current.time*1000):new Date(current.time);if(Number.isNaN(start.getTime()))return'';return new Date(start.getTime()+current.duration*1000).toISOString()}
 let lastCurrentKey='',lastNextKey='';
