@@ -17,4 +17,15 @@ function enforceStream(){document.querySelectorAll("audio").forEach(a=>{let s=""
 function guardStream(){const run=()=>enforceStream();if(document.readyState==="loading")document.addEventListener("DOMContentLoaded",run,{once:true});else run();document.addEventListener("play",run,true);if(window.MutationObserver){new MutationObserver(ms=>{if(ms.some(m=>m.target?.tagName==="AUDIO"||Array.from(m.addedNodes||[]).some(n=>n?.tagName==="AUDIO")))run()}).observe(document.documentElement,{subtree:true,childList:true,attributes:true,attributeFilter:["src"]})}}
 function render(c,n,h){if(!c)return;text("[data-current-title],#currentTitle,#title,#programCurrent,.current-title",c.title);text("[data-current-artist],#currentArtist,#artist,.current-artist",c.artist);text("[data-current-time],#broadcastTime,.current-time",clock(c.time));image("[data-current-cover],#currentCover,#cover,.current-cover,.cover-wrap img",c.cover);if(n){text("[data-next-title],#nextTitle,#programNext,.next-title",n.title);text("[data-next-artist],#nextArtist,.next-artist",n.artist);text("[data-next-time],#nextTime,.next-time",clock(n.time));image("[data-next-cover],#nextCover,.next-cover,.next-card img",n.cover)}const hist=(h||[]).filter(x=>x&&x.id!==c.id&&x.type==="music").slice(0,3);const last=hist[0];if(last){text("[data-news-last]",last.title);text("[data-news-last-artist]",last.artist);text("[data-news-last-time]",clock(last.time));image("[data-news-last-cover]",last.cover)}document.querySelectorAll("[data-previous]").forEach(box=>{if(!hist.length)return;box.innerHTML="";hist.forEach(x=>{const row=document.createElement("div");row.className="vm-programme-previous-item";row.innerHTML='<img alt=""><div class="previous-info"><strong class="previous-title"></strong><small class="previous-artist"></small><em class="previous-time"></em></div>';const im=row.querySelector("img");if(x.cover)im.src=x.cover;row.querySelector(".previous-title").textContent=x.title;row.querySelector(".previous-artist").textContent=x.artist||DEFAULT_ARTIST;row.querySelector(".previous-time").textContent=x.time?"Diffusé à "+clock(x.time):"";box.appendChild(row)})});enforceStream()}
 async function update(){try{const d=await get();const c=track(d?.now_playing?.song,d?.now_playing);if(!c)return;const n=track(d?.playing_next?.song,d?.playing_next);const h=(Array.isArray(d?.song_history)?d.song_history:[]).map(x=>track(x?.song,x)).filter(Boolean);render(c,n,h)}catch(e){console.warn("VM RADIO moteur indisponible",e)}}
-setTimeout(()=>{\n  // Le script central, plus récent, gère déjà le rendu et le calcul de l’heure suivante.\n  // On garde ce fichier uniquement comme solution de secours sur les anciennes pages.\n  if(window.__VMRADIO_CENTRAL_V11__)return;\n  guardStream();\n  if(!window.__VMRADIO_ENGINE_SYNC_ACTIVE__){\n    window.__VMRADIO_ENGINE_SYNC_ACTIVE__=true;\n    update();\n    setInterval(update,REFRESH);\n  }\n},0);\n})();
+setTimeout(()=>{
+  // Le script central, plus récent, gère déjà le rendu et le calcul de l’heure suivante.
+  // On garde ce fichier uniquement comme solution de secours sur les anciennes pages.
+  if(window.__VMRADIO_CENTRAL_V11__)return;
+  guardStream();
+  if(!window.__VMRADIO_ENGINE_SYNC_ACTIVE__){
+    window.__VMRADIO_ENGINE_SYNC_ACTIVE__=true;
+    update();
+    setInterval(update,REFRESH);
+  }
+},0);
+})();
