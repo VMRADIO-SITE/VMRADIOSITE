@@ -1076,68 +1076,7 @@ header ~ main h1:first-child {
     font-size:11px !important;
   }
 }
-</style><script>
-(function(){
-"use strict";
-const cfg={
- apiKey:"AIzaSyC7UHoMqRK9Hf0vt5FnSfCxBku3r6pGRow",
- authDomain:"dedicace-vm-radio.firebaseapp.com",
- databaseURL:"https://dedicace-vm-radio-default-rtdb.firebaseio.com",
- projectId:"dedicace-vm-radio",
- storageBucket:"dedicace-vm-radio.firebasestorage.app",
- messagingSenderId:"245187459665",
- appId:"1:245187459665:web:5397845feb6697c8b2d670",
- measurementId:"G-1LLTHDGD3B"
-};
-const esc=v=>String(v??"").replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
-function init(){
- const track=document.querySelector(".vm-common-dedication-track");
- if(!track || typeof firebase==="undefined") return;
- let app,auth,db;
- try{
-   app=firebase.apps.find(a=>a.name==="vmradio-common-dedications") ||
-      firebase.initializeApp(cfg,"vmradio-common-dedications");
-   auth=app.auth(); db=app.firestore();
- }catch(e){console.error(e);return;}
- auth.signInAnonymously().then(()=>{
-   db.collection("dedications").limit(500).onSnapshot(snap=>{
-     const items=snap.docs.filter(doc=>{
-      const x=doc.data()||{};
-      const n=String(x.name||"").trim().toLowerCase();
-      const to=String(x.to||"").trim().toLowerCase();
-      const m=String(x.message||"").trim().toLowerCase();
-      // Ignore the old built-in example in every form: Auditeur/empty → Laura : Valentin.
-      const oldExample = to==="laura" && m==="valentin" && (n==="" || n==="auditeur");
-      return !oldExample;
-    }).map(doc=>{
-       const d=doc.data()||{};
-       let t=0;
-       if(d.createdAt?.toMillis) t=d.createdAt.toMillis();
-       return {d,t};
-     }).sort((a,b)=>b.t-a.t);
-     if(!items.length){
-       track.classList.remove("is-scrolling");
-       track.innerHTML='<span class="vm-common-dedication-message">♡ Aucune dédicace pour le moment.</span>';
-       return;
-     }
-     const one=items.map(x=>{
-       const d=x.d;
-       const dn=String(d.name||"").trim().toLowerCase(), dt=String(d.to||"").trim().toLowerCase(), dm=String(d.message||"").trim().toLowerCase();
-       if(dt==="laura" && dm==="valentin" && (dn==="" || dn==="auditeur")) return "";
-       return `<span class="vm-common-dedication-message">💜 ${esc(d.name)}${d.to?" → "+esc(d.to):""} : ${esc(d.message)}</span>`;
-     }).join("");
-     // Duplicate the complete list so the whole set loops continuously.
-     track.innerHTML=one;
-     track.classList.remove("is-scrolling");
-     // Force a fresh animation only after the complete dedication is in the DOM.
-     void track.offsetWidth;
-     track.classList.add("is-scrolling");
-   },e=>console.error("Dédicaces publiques:",e));
- }).catch(e=>console.error("Auth dédicaces:",e));
-}
-if(document.readyState==="loading") document.addEventListener("DOMContentLoaded",init); else init();
-})();
-</script><script id="vm-spa-navigation">
+</style><script id="vm-spa-navigation">
 (function(){
 "use strict";
 const routes=["index.html","dedicaces.html","infos.html","conditions.html","tiktok.html"];
@@ -1523,117 +1462,7 @@ window.addEventListener("popstate",function(){
 </section></div>
 </main></div>
 <div class="before-footer-space"></div><div id="vm-footer"></div>
-<script id="vm-single-source-dedications">
-(function(){
-"use strict";
-const VM_FIREBASE_CONFIG={
- apiKey:"AIzaSyC7UHoMqRK9Hf0vt5FnSfCxBku3r6pGRow",
- authDomain:"dedicace-vm-radio.firebaseapp.com",
- databaseURL:"https://dedicace-vm-radio-default-rtdb.firebaseio.com",
- projectId:"dedicace-vm-radio",
- storageBucket:"dedicace-vm-radio.firebasestorage.app",
- messagingSenderId:"245187459665",
- appId:"1:245187459665:web:5397845feb6697c8b2d670",
- measurementId:"G-1LLTHDGD3B"
-};
-const vmEsc=v=>String(v??"").replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
-function vmOldExample(d){
- const n=String(d.name||"").trim().toLowerCase();
- const to=String(d.to||"").trim().toLowerCase();
- const m=String(d.message||"").trim().toLowerCase();
- return to==="laura" && m==="valentin" && (n==="" || n==="auditeur");
-}
-function vmGetDb(){
- let app=firebase.apps.find(a=>a.name==="vmradio-dedications-single-source");
- if(!app) app=firebase.initializeApp(VM_FIREBASE_CONFIG,"vmradio-dedications-single-source");
- return {app,auth:app.auth(),db:app.firestore()};
-}
-async function vmAuthDb(){
- const x=vmGetDb();
- if(!x.auth.currentUser) await x.auth.signInAnonymously();
- return x;
-}
-function vmRenderRecent(snap){
- const list=document.getElementById("publishedDedicationsList");
- if(!list)return;
- const items=snap.docs.map(doc=>{
-   const d=doc.data()||{};
-   let ms=0;
-   if(d.createdAt && typeof d.createdAt.toMillis==="function") ms=d.createdAt.toMillis();
-   else if(d.createdAt instanceof Date) ms=d.createdAt.getTime();
-   return {d,ms};
- }).filter(x=>!vmOldExample(x.d))
- .filter(x=>String(x.d.name||"").trim() && String(x.d.message||"").trim())
- .sort((a,b)=>b.ms-a.ms)
- .slice(0,10);
- if(!items.length){
-   list.innerHTML='<div class="empty">Aucune dédicace pour le moment.</div>';
-   return;
- }
- list.innerHTML=items.map(x=>{
-   const d=x.d;
-   let date="";
-   if(x.ms)date=new Intl.DateTimeFormat("fr-FR",{day:"2-digit",month:"2-digit",hour:"2-digit",minute:"2-digit"}).format(new Date(x.ms));
-   return `<div class="recent-item"><div class="recent-head"><b>💜 ${vmEsc(d.name)}${d.to?" → "+vmEsc(d.to):""}</b><span class="recent-time">${date}</span></div><div class="recent-msg">${vmEsc(d.message)}</div></div>`;
- }).join("");
-}
-async function vmStartRecent(){
- const list=document.getElementById("publishedDedicationsList");
- if(!list)return;
- try{
-   const {db}=await vmAuthDb();
-   if(window.__vmRecentUnsub)window.__vmRecentUnsub();
-   window.__vmRecentUnsub=db.collection("dedications").onSnapshot(vmRenderRecent,err=>{
-     console.error("VM RADIO — dernières dédicaces",err);
-     list.innerHTML='<div class="empty">Impossible de charger les dédicaces.</div>';
-   });
- }catch(e){
-   console.error("VM RADIO — Firebase dédicaces",e);
-   list.innerHTML='<div class="empty">Impossible de charger les dédicaces.</div>';
- }
-}
-async function vmStartForm(){
- const form=document.getElementById("dedicationForm");
- if(!form || form.dataset.vmBound==="1")return;
- form.dataset.vmBound="1";
- const name=document.getElementById("dedName"),to=document.getElementById("dedTo"),msg=document.getElementById("dedMessage");
- const count=document.getElementById("charCount"),feedback=document.getElementById("dedicationFeedback"),btn=document.getElementById("dedicationSubmit");
- if(msg&&count)msg.addEventListener("input",()=>count.textContent=String(msg.value.length));
- form.addEventListener("submit",async e=>{
-   e.preventDefault();
-   const n=(name?.value||"").trim(), dest=(to?.value||"").trim(), m=(msg?.value||"").trim();
-   if(!n||!m){if(feedback)feedback.textContent="Merci de remplir votre prénom/pseudo et votre message.";return;}
-   if(m.length>240)return;
-   if(btn){btn.disabled=true;btn.textContent="ENVOI...";}
-   try{
-     const {db}=await vmAuthDb();
-     await db.collection("dedications").add({
-       name:n,
-       to:dest,
-       message:m,
-       song:"",
-       createdAt:firebase.firestore.FieldValue.serverTimestamp()
-     });
-     form.reset();
-     if(count)count.textContent="0";
-     if(feedback)feedback.textContent="✓ Votre dédicace a bien été envoyée !";
-   }catch(err){
-     console.error("VM RADIO — envoi dédicace",err);
-     if(feedback)feedback.textContent="Impossible d’envoyer la dédicace. Vérifiez la connexion Firebase.";
-   }finally{
-     if(btn){btn.disabled=false;btn.textContent="♡ ENVOYER LA DÉDICACE";}
-   }
- });
-}
-async function vmInitDedicaces(){
- await vmStartRecent();
- await vmStartForm();
-}
-if(document.readyState==="loading")document.addEventListener("DOMContentLoaded",vmInitDedicaces,{once:true});
-else vmInitDedicaces();
-window.addEventListener("vmradio:pagechange",()=>setTimeout(vmInitDedicaces,0));
-})();
-</script>
+
 <script id="vm-automatic-clock">
 (function(){
 "use strict";
@@ -1759,4 +1588,5 @@ if(document.readyState==="loading"){
   new MutationObserver(scan).observe(document.body,{childList:true,subtree:true});
 })();
 </script>
+<script src="dedications-feed.js?v=1"></script>
 </body></html>
