@@ -103,6 +103,8 @@
         }).join('<span aria-hidden="true"> · </span>')
       : '<span class="vmDedItem">♡ Aucune dédicace pour le moment.</span>';
     const track = banner.querySelector(".vmDedTrack");
+    if (!track || track.dataset.vmCentralText === html) return;
+    track.dataset.vmCentralText = html;
     const texts = track ? track.querySelectorAll(".vmDedText") : [];
     texts.forEach(function (node) {
       node.innerHTML = html;
