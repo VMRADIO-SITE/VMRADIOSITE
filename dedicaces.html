@@ -1451,6 +1451,21 @@ document.addEventListener("visibilitychange",function(){if(!document.hidden)refr
 (function(){
 "use strict";
 const esc=function(v){return String(v??"").replace(/[&<>"']/g,function(c){return {"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c];});};
+function dedicationDeviceId(){
+  const key="vmradio_dedication_device_v1";
+  try{
+    const existing=localStorage.getItem(key)||"";
+    if(/^ded_device_[A-Za-z0-9_-]{12,96}$/.test(existing))return existing;
+    const random=(globalThis.crypto&&typeof globalThis.crypto.randomUUID==="function")
+      ?globalThis.crypto.randomUUID().replace(/-/g,"")
+      :(Date.now().toString(36)+Math.random().toString(36).slice(2));
+    const value="ded_device_"+Date.now().toString(36)+"_"+random.slice(0,24);
+    localStorage.setItem(key,value);
+    return value;
+  }catch(error){
+    return "ded_device_session_"+Date.now().toString(36)+Math.random().toString(36).slice(2,18);
+  }
+}
 function dedicationClientId(){
   const random=(globalThis.crypto&&typeof globalThis.crypto.randomUUID==="function")
     ?globalThis.crypto.randomUUID().replace(/-/g,"")
@@ -1459,7 +1474,7 @@ function dedicationClientId(){
 }
 async function postCentralDedication(api,data){
   const clientId=dedicationClientId();
-  const body=JSON.stringify(Object.assign({},data,{clientId:clientId}));
+  const body=JSON.stringify(Object.assign({},data,{clientId:clientId,deviceId:dedicationDeviceId()}));
   let networkError=null;
   try{
     const response=await fetch(api,{method:"POST",cache:"no-store",credentials:"omit",keepalive:true,headers:{"Content-Type":"text/plain;charset=UTF-8",Accept:"application/json"},body:body});
