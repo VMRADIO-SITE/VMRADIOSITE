@@ -32,7 +32,7 @@ function create(){
   if(!modal){
     modal=document.createElement('div');
     modal.id='vmRequestModal';
-    modal.innerHTML=`<div class="vmreq-card"><div class="vmreq-head"><div><h2>♫ Demander un titre</h2><p>Choisis un morceau du catalogue VM RADIO.</p></div><button class="vmreq-close" aria-label="Fermer">×</button></div><div class="vmreq-body"><section id="vmreqCatalog"><input id="vmreqSearch" class="vmreq-search" placeholder="Rechercher un titre ou un artiste…"><div id="vmreqList" class="vmreq-list"><div class="vmreq-empty">Chargement du catalogue…</div></div><div id="vmreqHistory" class="vmreq-history"></div></section><section id="vmreqConfirm" class="vmreq-confirm"><button class="vmreq-back">← Retour au catalogue</button><div id="vmreqSelected" class="vmreq-selected"></div><label style="font-size:12px;color:#c8bdcf">Ton prénom ou pseudo (facultatif)</label><input id="vmreqName" class="vmreq-name" maxlength="60" placeholder="Ex. Valentin"><button id="vmreqSend" class="vmreq-send">Envoyer ma demande</button></section><section id="vmreqResult" class="vmreq-result"><div class="icon" id="vmreqIcon">✓</div><h3 id="vmreqResultTitle"></h3><p id="vmreqResultText"></p><button class="vmreq-send" id="vmreqAgain">Choisir un autre titre</button></section></div></div>`;
+    modal.innerHTML=`<div class="vmreq-card"><div class="vmreq-head"><div><h2>♫ Demander un titre</h2><p>Choisis un morceau du catalogue VM RADIO.</p></div><button class="vmreq-close" aria-label="Fermer">×</button></div><div class="vmreq-body"><section id="vmreqCatalog"><input id="vmreqSearch" class="vmreq-search" placeholder="Rechercher un titre ou un artiste…"><div id="vmreqList" class="vmreq-list"><div class="vmreq-empty">Chargement du catalogue…</div></div><div id="vmreqHistory" class="vmreq-history"></div></section><section id="vmreqConfirm" class="vmreq-confirm"><button class="vmreq-back">← Retour au catalogue</button><div id="vmreqSelected" class="vmreq-selected"></div><label style="font-size:12px;color:#c8bdcf">Ton prénom ou pseudo (facultatif)</label><input id="vmreqName" class="vmreq-name" maxlength="60" placeholder="Ex. Valentin"><label style="font-size:12px;color:#c8bdcf">Ton message à l’antenne (facultatif)</label><textarea id="vmreqMessage" class="vmreq-name" maxlength="180" rows="3" style="resize:vertical;min-height:72px" placeholder="Ex. Bonne écoute à toute l’équipe !"></textarea><button id="vmreqSend" class="vmreq-send">Envoyer ma demande</button></section><section id="vmreqResult" class="vmreq-result"><div class="icon" id="vmreqIcon">✓</div><h3 id="vmreqResultTitle"></h3><p id="vmreqResultText"></p><button class="vmreq-send" id="vmreqAgain">Choisir un autre titre</button></section></div></div>`;
     document.body.appendChild(modal);
   }
 
@@ -116,8 +116,9 @@ async function sendRequest(){
   const btn=document.getElementById('vmreqSend');
   btn.disabled=true;btn.textContent='Envoi…';
   const requester=String(document.getElementById('vmreqName')?.value||'').trim();
+  const message=String(document.getElementById('vmreqMessage')?.value||'').trim();
   try{
-    const r=await fetch(API,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({file:selected.file,title:selected.title,artist:selected.artist,requester})});
+    const r=await fetch(API,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({file:selected.file,title:selected.title,artist:selected.artist,requester,message})});
     const d=await r.json().catch(()=>({}));
     const ok=r.ok&&d.ok!==false;
     const msg=d.error||d.data?.reason||(ok?'Ta demande a bien été ajoutée à la file de diffusion.':'La demande a été refusée.');
