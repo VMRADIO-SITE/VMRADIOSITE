@@ -1738,7 +1738,7 @@ window.addEventListener("vmradio:pagechange",function(){
 }
 </style>
 
-<link rel="icon" type="image/png" href="./favicon-64.png?v=6"><link rel="apple-touch-icon" href="./apple-touch-icon.png?v=6"><script src="vm-radio-flux-central.js"></script>
+<link rel="icon" type="image/png" href="./favicon-64.png?v=6"><link rel="apple-touch-icon" href="./apple-touch-icon.png?v=6"><script src="vm-radio-flux-central.js?v=20260827-heure2"></script>
 
 <style id="vmradio-request-home-static">
 .vm-request-home-wrap{display:flex!important;justify-content:center!important;align-items:center!important;width:100%!important;margin:14px 0 8px!important}
@@ -2003,7 +2003,7 @@ if(document.readyState==="loading"){
 </script>
 
 <div id="vmRadioSitePlayer" aria-label="Lecteur VM RADIO">
-  <iframe scrolling="no" src="player.html?v=11" title="Player VM RADIO" allow="autoplay"></iframe>
+  <iframe scrolling="no" src="player.html?v=12" title="Player VM RADIO" allow="autoplay"></iframe>
 </div>
 
 <button id="vmRadioIndependentReopen" type="button" aria-label="Réactiver le player" title="Réactiver le player">▶</button>
@@ -2139,11 +2139,11 @@ if(document.readyState==="loading"){
   var mobile=/Android|iPhone|iPad|iPod|Mobile/i.test(navigator.userAgent||"");
   var iframe=document.querySelector('#vmRadioSitePlayer iframe');
   if(mobile && iframe){
-    iframe.src="player-mobile.html";
+    iframe.src="player-mobile.html?v=12";
   }
 })();
-</script><script src="vm-radio-flux.js"></script>
-<script src="vm-radio-flux-central.js"></script>
+</script><script src="vm-radio-flux.js?v=20260827-heure2"></script>
+<script src="vm-radio-flux-central.js?v=20260827-heure2"></script>
 
 <script id="vmradio-top-titles-live">
 (function(){
