@@ -14,6 +14,20 @@ const time=v=>{v=Number(v||0);return v?Math.floor(v/60)+':'+String(Math.floor(v%
 function history(){try{return JSON.parse(localStorage.getItem('vmradio_request_history')||'[]')}catch{return[]}}
 function saveHistory(x){try{localStorage.setItem('vmradio_request_history',JSON.stringify([x,...history()].slice(0,5)))}catch{}}
 
+(function initListenerPresence(){
+  if(window.__VMRADIO_LISTENER_PRESENCE__)return;window.__VMRADIO_LISTENER_PRESENCE__=true;
+  const ENDPOINT='https://admin.vmradio.fr/api/public/listeners';
+  let clientId='';
+  try{clientId=localStorage.getItem('vmradio_listener_id')||'';if(!/^vm_listener_[A-Za-z0-9_-]{12,96}$/.test(clientId)){clientId='vm_listener_'+(crypto.randomUUID?crypto.randomUUID().replace(/-/g,''):Math.random().toString(36).slice(2)+Date.now().toString(36));localStorage.setItem('vmradio_listener_id',clientId)}}catch{clientId='vm_listener_'+Math.random().toString(36).slice(2)+Date.now().toString(36)}
+  const source=location.hostname.startsWith('app')?'app':'site';let timer=null,bound=null;
+  const send=async action=>{try{await fetch(ENDPOINT,{method:'POST',mode:'cors',cache:'no-store',keepalive:true,headers:{'Content-Type':'application/json'},body:JSON.stringify({clientId,source,action})})}catch(_){}};
+  const stop=()=>{if(timer){clearInterval(timer);timer=null}send('stop')};
+  const start=()=>{send('heartbeat');if(!timer)timer=setInterval(()=>send('heartbeat'),15000)};
+  const bind=()=>{const audio=window.VMRadioPlayer?.audio||document.getElementById('radioAudio');if(!audio||audio===bound)return false;bound=audio;audio.addEventListener('play',start);audio.addEventListener('playing',start);audio.addEventListener('pause',stop);audio.addEventListener('ended',stop);if(!audio.paused&&!audio.ended)start();return true};
+  if(!bind()){let tries=0;const wait=setInterval(()=>{if(bind()||++tries>80)clearInterval(wait)},250)}
+  window.addEventListener('pagehide',stop);
+})();
+
 function css(){
   if(document.getElementById('vmradio-request-ui-css'))return;
   const s=document.createElement('style');
