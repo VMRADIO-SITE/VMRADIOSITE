@@ -58,3 +58,5 @@ jobs:
           fi
           git commit -m 'feat: share site Top Titres with app ranking'
           git push
+
+# Triggered after workflow installation.
