@@ -1,0 +1,60 @@
+name: Patch shared Top Titres D1
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - '.github/workflows/patch-top-titres-d1.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  patch:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Connect site and players to shared D1 Top Titres
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+          import re
+
+          version='20260828-d1'
+          tag=f'<script src="./top-titres-d1.js?v={version}"></script>'
+
+          # Homepage: retire the old Firebase-only ranking renderer.
+          p=Path('index.html')
+          s=p.read_text(encoding='utf-8')
+          s=re.sub(r'\s*<script[^>]+id=["\']vmradio-top-titles-live["\'][^>]*>[\s\S]*?</script>', '', s, flags=re.I, count=1)
+          s=re.sub(r'\s*<script[^>]+src=["\'][^"\']*top-titres-d1\.js[^"\']*["\'][^>]*></script>', '', s, flags=re.I)
+          pos=s.lower().rfind('</body>')
+          s=(s[:pos]+tag+'\n'+s[pos:]) if pos!=-1 else s+'\n'+tag+'\n'
+          p.write_text(s,encoding='utf-8')
+
+          # Desktop and mobile players: the heart must write to D1, not only change colour locally.
+          for name in ('player.html','player-mobile.html'):
+              p=Path(name)
+              s=p.read_text(encoding='utf-8')
+              s=s.replace(";document.querySelector('[data-heart]')?.addEventListener('click',e=>e.currentTarget.classList.toggle('liked'))",'')
+              s=re.sub(r'\s*<script[^>]+src=["\'][^"\']*top-titres-d1\.js[^"\']*["\'][^>]*></script>', '', s, flags=re.I)
+              pos=s.lower().rfind('</body>')
+              s=(s[:pos]+tag+'\n'+s[pos:]) if pos!=-1 else s+'\n'+tag+'\n'
+              p.write_text(s,encoding='utf-8')
+          PY
+
+      - name: Commit shared Top Titres integration
+        run: |
+          git config user.name 'VM RADIO'
+          git config user.email 'valentinrasle7070.vr@icloud.com'
+          git add index.html player.html player-mobile.html
+          if git diff --cached --quiet; then
+            echo 'No change needed'
+            exit 0
+          fi
+          git commit -m 'feat: share site Top Titres with app ranking'
+          git push
