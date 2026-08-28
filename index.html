@@ -1973,41 +1973,6 @@ if(document.readyState==="loading"){
 })();
 </script><script src="vm-radio-flux.js?v=20260827-heure4"></script>
 <script src="vm-radio-flux-central.js?v=20260827-requester4"></script>
-
-<script id="vmradio-top-titles-live">
-(function(){
-  "use strict";
-  const box=document.querySelector("[data-favorites]");
-  if(!box)return;
-  const CFG={apiKey:"AIzaSyBng0eLDl7Pv05Wrx3U07rV3pxLMRGIpfk",
-authDomain:"vmradio-d07e1.firebaseapp.com",
-projectId:"vmradio-d07e1",
-storageBucket:"vmradio-d07e1.firebasestorage.app",
-messagingSenderId:"178955924208",
-appId:"1:178955924208:web:ba7ae54d489951d56ec835"};
-  function esc(v){return String(v??"").replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));}
-  function render(snap){
-    const rows=snap.docs.map(d=>({id:d.id,d:d.data()||{}})).filter(x=>Number(x.d.votes||0)>0)
-      .sort((a,b)=>Number(b.d.votes||0)-Number(a.d.votes||0)).slice(0,5);
-    if(!rows.length){box.innerHTML='<div class="hint">Appuyez sur le ❤️ du player pour ajouter vos titres préférés ici.</div>';return;}
-    box.innerHTML=rows.map((x,i)=>`<div class="vm-top-title-row">
-      <span class="vm-top-rank">${i+1}</span>
-      <img class="vm-top-cover" src="${esc(x.d.cover)}" alt="">
-      <div class="vm-top-info"><b>${esc(x.d.title||"Titre")}</b><span>${esc(x.d.artist||"VM RADIO")}</span></div>
-      <strong class="vm-top-votes">♥ ${Number(x.d.votes||0)}</strong>
-    </div>`).join("");
-  }
-  async function init(){
-    try{
-      let app=firebase.apps.find(a=>a.name==="vmradio-top-titles")||firebase.initializeApp(CFG,"vmradio-top-titles");
-      const auth=app.auth(); const db=app.firestore();
-      if(!auth.currentUser)await auth.signInAnonymously();
-      db.collection("topTitres").orderBy("votes","desc").limit(5).onSnapshot(render,e=>console.error("VM RADIO — Top Titres",e));
-    }catch(e){console.error("VM RADIO — Top Titres",e);}
-  }
-  if(document.readyState==="loading")document.addEventListener("DOMContentLoaded",init,{once:true});else init();
-})();
-</script>
 <script id="vmradio-default-cover-fallback">
 (function(){
   const DEFAULT_COVER="assets/vm-radio-default-cover.jpeg";
@@ -2053,4 +2018,5 @@ appId:"1:178955924208:web:ba7ae54d489951d56ec835"};
 })();
 </script>
 <script src="dedications-feed.js?v=5"></script>
+<script src="./top-titres-d1.js?v=20260828-d1"></script>
 </body></html>
