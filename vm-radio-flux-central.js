@@ -65,3 +65,12 @@ function ensureRequestHomeButton(){const wrap=document.getElementById('vmRequest
 const init=()=>{protectImages();if(!DIRECT_PLAYER)initCentralAudio();loadRequestUi();ensureRequestHomeButton();refresh();setInterval(refresh,REFRESH);document.addEventListener('visibilitychange',()=>{if(!document.hidden)refresh()});window.addEventListener('focus',refresh);window.addEventListener('vmradio:pagechange',()=>setTimeout(ensureRequestHomeButton,50))};
 if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',init,{once:true});else init();
 })();
+
+(function(){
+  if(document.querySelector('script[data-vm-source-badge]'))return;
+  const s=document.createElement('script');
+  s.src='player-source-badge.js?v=20260829-1';
+  s.async=true;
+  s.dataset.vmSourceBadge='1';
+  document.head.appendChild(s);
+})();
