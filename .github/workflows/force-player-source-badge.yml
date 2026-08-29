@@ -1,0 +1,43 @@
+name: Force player source badge
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - '.github/workflows/force-player-source-badge.yml'
+
+permissions:
+  contents: write
+
+jobs:
+  patch:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Force player version and badge loader
+        shell: bash
+        run: |
+          python3 - <<'PY'
+          from pathlib import Path
+          import re
+          changed=[]
+          for p in Path('.').glob('*.html'):
+              text=p.read_text(encoding='utf-8')
+              old=text
+              text=re.sub(r'vm-radio-flux-central\.js(?:\?[^"\']*)?', 'vm-radio-flux-central.js?v=20260829-sourcebadge1', text, flags=re.I)
+              if 'player-source-badge.js' not in text and '</body>' in text.lower():
+                  text=re.sub(r'</body>', '<script src="./player-source-badge.js?v=20260829-sourcebadge1"></script></body>', text, count=1, flags=re.I)
+              if text!=old:
+                  p.write_text(text,encoding='utf-8')
+                  changed.append(str(p))
+          print('Patched:', ', '.join(changed) or 'none')
+          PY
+      - name: Commit changes
+        shell: bash
+        run: |
+          if git diff --quiet; then exit 0; fi
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add '*.html'
+          git commit -m "Force player source badge on site pages"
+          git push
