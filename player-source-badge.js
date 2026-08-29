@@ -1,8 +1,8 @@
 /* VM RADIO — halo source : Rotation / Demande / Émission / Jingle */
 (function(){
 'use strict';
-if(window.__VMRADIO_PLAYER_SOURCE_HALO_V1__)return;
-window.__VMRADIO_PLAYER_SOURCE_HALO_V1__=true;
+if(window.__VMRADIO_PLAYER_SOURCE_HALO_V2__)return;
+window.__VMRADIO_PLAYER_SOURCE_HALO_V2__=true;
 
 const ENGINE='https://admin.vmradio.fr/api/radio/nowplaying';
 const REFRESH=1500;
@@ -40,6 +40,33 @@ img.vm-source-halo[data-vm-source-kind="rotation"]{--vm-source-color:#a855f7}
 img.vm-source-halo[data-vm-source-kind="request"]{--vm-source-color:#f5a524}
 img.vm-source-halo[data-vm-source-kind="emission"]{--vm-source-color:#39d353}
 img.vm-source-halo[data-vm-source-kind="jingle"]{--vm-source-color:#ec4899}
+.vm-source-legend{
+  width:100%!important;
+  margin:14px 0 0!important;
+  padding:8px 11px!important;
+  display:flex!important;
+  align-items:center!important;
+  justify-content:center!important;
+  flex-wrap:wrap!important;
+  gap:8px 14px!important;
+  border:1px solid rgba(255,255,255,.10)!important;
+  border-radius:999px!important;
+  background:rgba(8,5,13,.58)!important;
+  color:#bdb5c7!important;
+  font:700 10px/1.2 Arial,Helvetica,sans-serif!important;
+  box-sizing:border-box!important;
+}
+.vm-source-legend-item{display:inline-flex!important;align-items:center!important;gap:5px!important;white-space:nowrap!important;opacity:.72!important;transition:opacity .25s ease,transform .25s ease,color .25s ease!important}
+.vm-source-legend-item::before{content:"";display:block;width:8px;height:8px;border-radius:50%;background:var(--legend-color);box-shadow:0 0 7px var(--legend-color)}
+.vm-source-legend-item[data-kind="rotation"]{--legend-color:#a855f7}
+.vm-source-legend-item[data-kind="request"]{--legend-color:#f5a524}
+.vm-source-legend-item[data-kind="emission"]{--legend-color:#39d353}
+.vm-source-legend-item[data-kind="jingle"]{--legend-color:#ec4899}
+.vm-source-legend[data-active-kind="rotation"] .vm-source-legend-item[data-kind="rotation"],
+.vm-source-legend[data-active-kind="request"] .vm-source-legend-item[data-kind="request"],
+.vm-source-legend[data-active-kind="emission"] .vm-source-legend-item[data-kind="emission"],
+.vm-source-legend[data-active-kind="jingle"] .vm-source-legend-item[data-kind="jingle"]{opacity:1!important;color:#fff!important;transform:scale(1.04)}
+@media(max-width:600px){.vm-source-legend{margin-top:10px!important;padding:7px 8px!important;gap:6px 10px!important;font-size:8.5px!important;border-radius:16px!important}.vm-source-legend-item::before{width:7px;height:7px}}
 @supports not (color:color-mix(in srgb,red,blue)){
   img.vm-source-halo[data-vm-source-kind="rotation"]{box-shadow:0 0 0 1px #a855f7,0 0 14px #a855f7,0 0 28px rgba(168,85,247,.55)!important}
   img.vm-source-halo[data-vm-source-kind="request"]{box-shadow:0 0 0 1px #f5a524,0 0 14px #f5a524,0 0 28px rgba(245,165,36,.55)!important}
@@ -72,8 +99,29 @@ function currentCoverImages(){
   return out;
 }
 
-function cleanupOldBadges(){
-  document.querySelectorAll('.vm-source-badge').forEach(el=>el.remove());
+function legendTargets(){
+  const selectors=['.player-shell','.radio-player','#programme-direct'];
+  const out=[];
+  for(const sel of selectors){
+    document.querySelectorAll(sel).forEach(el=>{if(el&&!out.includes(el))out.push(el)});
+  }
+  return out;
+}
+
+function cleanupOldBadges(){document.querySelectorAll('.vm-source-badge').forEach(el=>el.remove())}
+
+function ensureLegends(info){
+  for(const target of legendTargets()){
+    let legend=Array.from(target.children).find(el=>el.classList?.contains('vm-source-legend'));
+    if(!legend){
+      legend=document.createElement('div');
+      legend.className='vm-source-legend';
+      legend.setAttribute('aria-label','Signification des couleurs du halo');
+      legend.innerHTML='<span class="vm-source-legend-item" data-kind="rotation">Rotation</span><span class="vm-source-legend-item" data-kind="request">Demande</span><span class="vm-source-legend-item" data-kind="emission">Émission</span><span class="vm-source-legend-item" data-kind="jingle">Jingle</span>';
+      target.appendChild(legend);
+    }
+    legend.dataset.activeKind=info.kind;
+  }
 }
 
 function applyHalo(info){
@@ -85,35 +133,28 @@ function applyHalo(info){
     img.dataset.vmSourceLabel=info.label;
     img.title=info.kind==='emission'?'Émission : '+info.label:info.label;
   }
+  ensureLegends(info);
 }
 
 let currentInfo={kind:'rotation',label:'Rotation'};
 let busy=false;
-
 async function refresh(){
   applyHalo(currentInfo);
   if(busy)return;
   busy=true;
   try{
     const r=await fetch(ENGINE+'?_halo='+Date.now(),{cache:'no-store',credentials:'omit'});
-    if(r.ok){
-      currentInfo=classify(await r.json());
-      applyHalo(currentInfo);
-    }
+    if(r.ok){currentInfo=classify(await r.json());applyHalo(currentInfo)}
   }catch(_){}
   finally{busy=false}
 }
 
 const start=()=>{
-  ensureStyle();
-  applyHalo(currentInfo);
-  refresh();
-  setInterval(refresh,REFRESH);
+  ensureStyle();applyHalo(currentInfo);refresh();setInterval(refresh,REFRESH);
   window.addEventListener('focus',refresh);
   document.addEventListener('visibilitychange',()=>{if(!document.hidden)refresh()});
   window.addEventListener('vmradio:pagechange',()=>setTimeout(refresh,50));
   new MutationObserver(()=>applyHalo(currentInfo)).observe(document.body,{childList:true,subtree:true});
 };
-
 if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',start,{once:true});else start();
 })();
