@@ -21,11 +21,10 @@ jobs:
           from pathlib import Path
           import re
           changed=[]
-          version='20260829-sourcehalo1'
+          version='20260829-sourceclean1'
           for p in Path('.').glob('*.html'):
               text=p.read_text(encoding='utf-8')
               old=text
-              text=re.sub(r'vm-radio-flux-central\.js(?:\?[^"\']*)?', f'vm-radio-flux-central.js?v={version}', text, flags=re.I)
               text=re.sub(r'player-source-badge\.js(?:\?[^"\']*)?', f'player-source-badge.js?v={version}', text, flags=re.I)
               if 'player-source-badge.js' not in text and '</body>' in text.lower():
                   text=re.sub(r'</body>', f'<script src="./player-source-badge.js?v={version}"></script></body>', text, count=1, flags=re.I)
@@ -41,5 +40,5 @@ jobs:
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
           git add '*.html'
-          git commit -m "Force sourcehalo1 on site pages"
+          git commit -m "Force sourceclean1 on site pages"
           git push
