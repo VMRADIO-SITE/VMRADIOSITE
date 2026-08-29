@@ -31,8 +31,8 @@ function ensureStyle(){
 
 .vm-site-source-cover{border:2px solid var(--vm-source-color,#a855f7)!important;transition:border-color .35s ease,box-shadow .35s ease!important}
 .vm-site-source-cover[data-source="rotation"]{--vm-source-color:#a855f7;box-shadow:0 0 3px rgba(168,85,247,.35)!important}
-.vm-site-source-cover[data-source="request"]{--vm-source-color:#f5a524;box-shadow:0 0 3px rgba(245,165,36,.35)!important}
-.vm-site-source-cover[data-source="emission"]{--vm-source-color:#22c55e;box-shadow:0 0 3px rgba(34,197,94,.35)!important}
+.vm-site-source-cover[data-source="request"]{--vm-source-color:#C8A3A0;box-shadow:0 0 3px rgba(200,163,160,.35)!important}
+.vm-site-source-cover[data-source="emission"]{--vm-source-color:#A8B5B5;box-shadow:0 0 3px rgba(168,181,181,.35)!important}
 .vm-site-source-cover[data-source="jingle"]{--vm-source-color:#ec4899;box-shadow:0 0 3px rgba(236,72,153,.35)!important}
 
 .vm-site-emission-name{display:none;margin-top:8px;width:100%;max-width:150px;text-align:center;color:#55df78;font:800 10px/1.25 Arial,sans-serif;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
@@ -43,7 +43,7 @@ function ensureStyle(){
 
 #vmSiteSourceLegend{display:flex!important;align-items:center!important;justify-content:flex-start!important;flex-wrap:wrap!important;gap:6px 12px!important;margin:9px 0 0!important;padding:0!important;border:0!important;background:none!important;box-shadow:none!important;font:800 9px/1.2 Arial,sans-serif!important}
 #vmSiteSourceLegend span{display:inline-flex!important;align-items:center!important;gap:4px!important;white-space:nowrap!important}
-#vmSiteSourceLegend .rotation{color:#a855f7!important}#vmSiteSourceLegend .request{color:#f5a524!important}#vmSiteSourceLegend .emission{color:#22c55e!important}#vmSiteSourceLegend .jingle{color:#ec4899!important}
+#vmSiteSourceLegend .rotation{color:#a855f7!important}#vmSiteSourceLegend .request{color:#C8A3A0!important}#vmSiteSourceLegend .emission{color:#A8B5B5!important}#vmSiteSourceLegend .jingle{color:#ec4899!important}
 
 /* interdit les anciennes légendes */
 .radio-player .vm-source-legend,.radio-player #vmIndexSourceLegend{display:none!important}
