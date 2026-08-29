@@ -22,7 +22,7 @@ if(volume){audio.volume=Number(volume.value||.85);volume.addEventListener('input
 audio.addEventListener('play',sync);audio.addEventListener('playing',sync);audio.addEventListener('pause',sync);audio.addEventListener('waiting',()=>status.textContent='CONNEXION…');audio.addEventListener('error',()=>{status.textContent='FLUX INDISPONIBLE';console.error('VM RADIO direct audio error',audio.error?.code,audio.error?.message)});window.VMRadioPlayer={play:()=>audio.play(),pause:()=>audio.pause(),stream:STREAM,audio};sync();
 })();
 </script>
-<script src="vm-radio-flux-central.js?v=20260829-sourcebadge1"></script>
+<script src="vm-radio-flux-central.js?v=20260829-sourcebadge2"></script>
 <script>(function(){const clock=document.getElementById('vmPlayerClock');const fmt=new Intl.DateTimeFormat('fr-FR',{timeZone:'Europe/Paris',hour:'2-digit',minute:'2-digit',second:'2-digit',hour12:false});function tick(){if(clock)clock.textContent=fmt.format(new Date())}tick();setInterval(tick,1000)})();</script>
 <script src="./top-titres-d1.js?v=20260828-d1"></script>
-<script src="./player-source-badge.js?v=20260829-sourcebadge1"></script></body></html>
+<script src="./player-source-badge.js?v=20260829-sourcebadge2"></script></body></html>
