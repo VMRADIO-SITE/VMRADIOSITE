@@ -1,0 +1,35 @@
+name: Install TikTok Manager feed
+on:
+  push:
+    branches: [main]
+    paths:
+      - '.github/workflows/install-tiktok-admin-feed.yml'
+  workflow_dispatch:
+permissions:
+  contents: write
+jobs:
+  patch:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: main
+      - name: Inject Manager feed
+        run: |
+          python3 - <<'PY'
+          from pathlib import Path
+          p=Path('tiktok.html')
+          s=p.read_text(encoding='utf-8')
+          tag='<script src="./tiktok-admin-feed.js?v=20260830-1"></script>'
+          if tag not in s:
+              if '</body>' not in s: raise SystemExit('body closing tag missing')
+              s=s.replace('</body>',tag+'\n</body>',1)
+              p.write_text(s,encoding='utf-8')
+          print('TikTok page connected to Manager')
+          PY
+      - name: Commit
+        run: |
+          git config user.name "VM RADIO"
+          git config user.email "contact@vmradio.fr"
+          git add tiktok.html
+          if git diff --cached --quiet; then echo "Aucun changement"; else git commit -m "Pilote les vidéos TikTok depuis le Manager" && git push origin main; fi
