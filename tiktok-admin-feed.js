@@ -7,9 +7,8 @@
   const esc=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
   function renderVideo(v){
     const id=Number(v.id)||0;
-    const title=esc(v.title||'Vidéo VM RADIO');
-    if(v.type==='mp4')return `<article class="tiktok-video" data-admin-video="${id}"><div class="tiktok-player"><video controls playsinline preload="metadata" src="${esc(v.url)}" title="${title}"></video></div></article>`;
-    return `<article class="tiktok-video" data-admin-video="${id}"><div class="tiktok-player"><iframe allow="autoplay; fullscreen" allowfullscreen loading="lazy" title="${title}" src="${esc(v.embedUrl||v.url)}"></iframe></div></article>`;
+    if(v.type==='mp4')return `<article class="tiktok-video" data-admin-video="${id}"><div class="tiktok-player"><video controls playsinline preload="metadata" src="${esc(v.url)}"></video></div></article>`;
+    return `<article class="tiktok-video" data-admin-video="${id}"><div class="tiktok-player"><iframe allow="autoplay; fullscreen" allowfullscreen loading="lazy" src="${esc(v.embedUrl||v.url)}"></iframe></div></article>`;
   }
   function signature(videos){return videos.map(v=>[Number(v.id)||0,Number(v.updatedAt)||0,String(v.url||''),String(v.embedUrl||''),String(v.type||'')].join('|')).join(';;')}
   function boxes(){return [...document.querySelectorAll('.tiktok-videos')]}
