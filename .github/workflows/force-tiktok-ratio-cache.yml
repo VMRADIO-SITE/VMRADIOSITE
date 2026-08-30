@@ -1,0 +1,37 @@
+name: Force nouveau lecteur TikTok site
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - '.github/workflows/force-tiktok-ratio-cache.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  patch:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Forcer la nouvelle version du script
+        run: |
+          python3 - <<'PY'
+          from pathlib import Path
+          import re
+          p=Path('tiktok.html')
+          s=p.read_text(encoding='utf-8')
+          s2=re.sub(r'tiktok-admin-feed\.js(?:\?v=[^"\']*)?', 'tiktok-admin-feed.js?v=20260830-real-ratio3', s)
+          if s2==s:
+              raise SystemExit('Référence tiktok-admin-feed.js introuvable')
+          p.write_text(s2,encoding='utf-8')
+          PY
+      - name: Commit
+        run: |
+          git config user.name "VM RADIO"
+          git config user.email "contact@vmradio.fr"
+          git add tiktok.html
+          git diff --cached --quiet && exit 0
+          git commit -m "Force le vrai ratio vidéo sur le site"
+          git push
