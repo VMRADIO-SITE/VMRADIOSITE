@@ -1,0 +1,36 @@
+name: Cleanup mistaken TikTok manager
+on:
+  push:
+    branches: [main]
+    paths:
+      - '.github/workflows/cleanup-mistaken-tiktok-manager.yml'
+permissions:
+  contents: write
+jobs:
+  cleanup:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: main
+          fetch-depth: 0
+      - name: Remove mistaken TikTok manager files
+        run: |
+          python3 - <<'PY'
+          from pathlib import Path
+          p=Path('tiktok.html')
+          s=p.read_text(encoding='utf-8')
+          s=s.replace('<script src="./tiktok-admin-feed.js?v=20260830-1"></script>\n','')
+          s=s.replace('<script src="./tiktok-admin-feed.js?v=20260830-1"></script>','')
+          p.write_text(s,encoding='utf-8')
+          PY
+          rm -f tiktok-admin-feed.js
+          rm -f .github/workflows/install-tiktok-admin-feed.yml
+          rm -f .github/workflows/cleanup-mistaken-tiktok-manager.yml
+      - name: Commit cleanup
+        run: |
+          git config user.name "VM RADIO"
+          git config user.email "contact@vmradio.fr"
+          git add -A
+          git commit -m "Retire le Manager TikTok du mauvais dépôt"
+          git push origin main
