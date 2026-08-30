@@ -1,0 +1,52 @@
+name: Corrige format vidéos TikTok site
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - '.github/workflows/fix-site-video-ratio.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  patch:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Corriger le lecteur TikTok
+        run: |
+          python3 - <<'PY'
+          from pathlib import Path
+          import re
+
+          p=Path('tiktok.html')
+          s=p.read_text(encoding='utf-8')
+
+          css='''\n<style id="vm-tiktok-uploaded-video-ratio-final">\n/* Les vidéos importées suivent leur vrai ratio, sans zoom. */\n.tiktok-player:has(> video){\n  aspect-ratio:auto !important;\n  width:100% !important;\n  max-width:520px !important;\n}\n.tiktok-player > video{\n  width:100% !important;\n  height:auto !important;\n  max-height:72vh !important;\n  display:block !important;\n  object-fit:contain !important;\n  background:#000 !important;\n}\n</style>\n'''
+
+          if 'vm-tiktok-uploaded-video-ratio-final' not in s:
+              s=s.replace('</head>',css+'</head>',1)
+
+          # Force le navigateur à récupérer le nouveau moteur dynamique.
+          s=re.sub(
+              r'<script\b[^>]*src=["\'][^"\']*tiktok-admin-feed\.js[^"\']*["\'][^>]*>\s*</script>',
+              '<script src="./tiktok-admin-feed.js?v=20260830-video-ratio-site2"></script>',
+              s,
+              count=1,
+              flags=re.I
+          )
+          if 'tiktok-admin-feed.js?v=20260830-video-ratio-site2' not in s:
+              s=s.replace('</body>','<script src="./tiktok-admin-feed.js?v=20260830-video-ratio-site2"></script>\n</body>',1)
+
+          p.write_text(s,encoding='utf-8')
+          PY
+      - name: Commit
+        run: |
+          git config user.name "VM RADIO"
+          git config user.email "contact@vmradio.fr"
+          git add tiktok.html
+          git diff --cached --quiet && exit 0
+          git commit -m "Corrige l’affichage carré des vidéos TikTok sur le site"
+          git push
