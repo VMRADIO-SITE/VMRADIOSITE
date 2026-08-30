@@ -1677,6 +1677,23 @@ body{background:
   }
 }
 </style><script src="vm-radio-flux-central.js?v=20260829-sourcehalo1"></script>
+
+<style id="vm-tiktok-uploaded-video-ratio-final">
+/* Les vidéos importées suivent leur vrai ratio, sans zoom. */
+.tiktok-player:has(> video){
+  aspect-ratio:auto !important;
+  width:100% !important;
+  max-width:520px !important;
+}
+.tiktok-player > video{
+  width:100% !important;
+  height:auto !important;
+  max-height:72vh !important;
+  display:block !important;
+  object-fit:contain !important;
+  background:#000 !important;
+}
+</style>
 </head><body>
 <div class="page">
 <div aria-label="Dédicaces" class="vm-common-dedication-banner">
@@ -1897,5 +1914,5 @@ body{background:
 })();
 </script>
 <script src="dedications-feed.js?v=5"></script>
-<script src="./player-source-badge.js?v=20260829-sourceclean1"></script><script src="./tiktok-admin-feed.js?v=20260830-site-manager1"></script>
+<script src="./player-source-badge.js?v=20260829-sourceclean1"></script><script src="./tiktok-admin-feed.js?v=20260830-video-ratio-site2"></script>
 </body></html>
