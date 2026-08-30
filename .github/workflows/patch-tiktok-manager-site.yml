@@ -1,0 +1,43 @@
+name: Patch TikTok Manager site
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - '.github/workflows/patch-tiktok-manager-site.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  patch:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Patch tiktok.html
+        run: |
+          python3 - <<'PY'
+          from pathlib import Path
+          import re
+          p=Path('tiktok.html')
+          s=p.read_text(encoding='utf-8')
+          # retire uniquement les cartes vidéo TikTok statiques
+          s=re.sub(r'<article\s+class=["\']tiktok-video["\'][^>]*>.*?</article>','',s,flags=re.I|re.S)
+          # état de chargement si le conteneur devient vide
+          s=re.sub(r'(<div\s+class=["\']tiktok-videos["\'][^>]*>)\s*(</div>)',r'\1<div class="tiktok-empty" style="grid-column:1/-1;text-align:center;color:#aaa5b4;padding:24px">Chargement des vidéos…</div>\2',s,count=1,flags=re.I|re.S)
+          version='20260830-site-manager1'
+          tag=f'<script src="./tiktok-admin-feed.js?v={version}"></script>'
+          pat=re.compile(r'<script\b[^>]*src=["\'][^"\']*tiktok-admin-feed\.js[^"\']*["\'][^>]*>\s*</script>',re.I)
+          if pat.search(s): s=pat.sub(tag,s,count=1)
+          else: s=s.replace('</body>',tag+'\n</body>',1)
+          p.write_text(s,encoding='utf-8')
+          PY
+      - name: Commit
+        run: |
+          git config user.name "VM RADIO"
+          git config user.email "contact@vmradio.fr"
+          git add tiktok.html
+          git diff --cached --quiet && exit 0
+          git commit -m "Synchronise les vidéos TikTok du site avec le Manager"
+          git push
