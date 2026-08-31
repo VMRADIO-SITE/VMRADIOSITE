@@ -9,7 +9,7 @@
   function renderVideo(v){
     const id=Number(v.id)||0;
     const title=esc(v.title||'Vidéo VM RADIO');
-    if(v.type==='mp4')return `<article class="tiktok-video vm-local-video" data-admin-video="${id}"><div class="tiktok-player"><video controls playsinline preload="metadata" src="${esc(v.url)}" title="${title}"></video></div></article>`;
+    if(v.type==='mp4')return `<article class="tiktok-video vm-local-video" data-admin-video="${id}"><div class="tiktok-player"><video controls playsinline preload="auto" src="${esc(v.url)}" title="${title}"></video></div></article>`;
     return `<article class="tiktok-video" data-admin-video="${id}"><div class="tiktok-player"><iframe allow="autoplay; fullscreen" allowfullscreen loading="lazy" title="${title}" src="${esc(v.embedUrl||v.url)}"></iframe></div></article>`;
   }
 
@@ -45,8 +45,29 @@
         video.style.setProperty('background','#000','important');
         video.style.setProperty('max-height','72vh','important');
       };
-      if(video.readyState>=1)apply();
-      else video.addEventListener('loadedmetadata',apply,{once:true});
+
+      const forcePreview=()=>{
+        try{
+          if(video.duration && isFinite(video.duration)){
+            const t=Math.min(0.08,Math.max(0.01,video.duration/1000));
+            if(video.currentTime<0.01)video.currentTime=t;
+          }
+          video.pause();
+        }catch(e){}
+      };
+
+      if(video.readyState>=1){
+        apply();
+        forcePreview();
+      }else{
+        video.addEventListener('loadedmetadata',()=>{
+          apply();
+          forcePreview();
+        },{once:true});
+      }
+
+      video.addEventListener('loadeddata',forcePreview,{once:true});
+      video.addEventListener('canplay',forcePreview,{once:true});
     });
   }
 
