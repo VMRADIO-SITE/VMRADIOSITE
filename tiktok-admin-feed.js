@@ -1,7 +1,7 @@
 (()=>{
   'use strict';
   const API='https://admin.vmradio.fr/api/public/tiktok-videos';
-  const POLL_MS=3000;
+  const POLL_MS=5000;
   let busy=false;
   let lastSignature='';
   const esc=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
@@ -55,26 +55,38 @@
     boxes().forEach(box=>{box.innerHTML=html;box.dataset.vmTikTokManaged='1';fitLocalVideos(box)});
   }
 
-  async function refresh(force=false){
-    if(busy||!boxes().length)return;
+  async function refresh(){
+    const currentBoxes=boxes();
+    if(busy||!currentBoxes.length)return;
     busy=true;
     try{
       const r=await fetch(API+'?nocache='+Date.now(),{method:'GET',mode:'cors',cache:'no-store',headers:{'Accept':'application/json','Cache-Control':'no-cache'}});
       const d=await r.json();
       if(!r.ok||!d.ok||!Array.isArray(d.videos))throw Error('Flux TikTok indisponible');
       const sig=signature(d.videos);
-      if(force||sig!==lastSignature||boxes().some(x=>x.dataset.vmTikTokManaged!=='1')){lastSignature=sig;render(d.videos)}
+      const unmanaged=currentBoxes.some(x=>x.dataset.vmTikTokManaged!=='1');
+      const changed=sig!==lastSignature;
+      if(!lastSignature||changed||unmanaged){
+        lastSignature=sig;
+        render(d.videos);
+      }else{
+        fitLocalVideos(document);
+      }
     }catch(e){console.warn('VM RADIO TikTok Manager:',e)}finally{busy=false}
   }
 
   function start(){
-    refresh(true);
-    const observer=new MutationObserver(()=>{if(boxes().some(x=>x.dataset.vmTikTokManaged!=='1'))refresh(true)});
+    refresh();
+    const observer=new MutationObserver(()=>{
+      if(boxes().some(x=>x.dataset.vmTikTokManaged!=='1'))refresh();
+    });
     observer.observe(document.body,{childList:true,subtree:true});
-    document.addEventListener('visibilitychange',()=>{if(!document.hidden){fitLocalVideos(document);refresh(true)}});
-    window.addEventListener('focus',()=>{fitLocalVideos(document);refresh(true)});
+    document.addEventListener('visibilitychange',()=>{
+      if(!document.hidden){fitLocalVideos(document);refresh()}
+    });
+    window.addEventListener('focus',()=>{fitLocalVideos(document);refresh()});
     window.addEventListener('resize',()=>fitLocalVideos(document));
-    setInterval(()=>{if(!document.hidden)refresh(false)},POLL_MS);
+    setInterval(()=>{if(!document.hidden)refresh()},POLL_MS);
   }
 
   if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',start,{once:true});else start();
