@@ -1,7 +1,7 @@
 (()=>{
   'use strict';
   const API='https://admin.vmradio.fr/api/public/tiktok-videos';
-  const POLL_MS=5000;
+  const POLL_MS=3000;
   let busy=false;
   let lastSignature='';
   const esc=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
@@ -9,7 +9,7 @@
   function renderVideo(v){
     const id=Number(v.id)||0;
     const title=esc(v.title||'Vidéo VM RADIO');
-    if(v.type==='mp4')return `<article class="tiktok-video vm-local-video" data-admin-video="${id}"><div class="tiktok-player"><video controls playsinline preload="auto" src="${esc(v.url)}" title="${title}"></video></div></article>`;
+    if(v.type==='mp4')return `<article class="tiktok-video vm-local-video" data-admin-video="${id}"><div class="tiktok-player"><video controls playsinline preload="metadata" src="${esc(v.url)}" title="${title}"></video></div></article>`;
     return `<article class="tiktok-video" data-admin-video="${id}"><div class="tiktok-player"><iframe allow="autoplay; fullscreen" allowfullscreen loading="lazy" title="${title}" src="${esc(v.embedUrl||v.url)}"></iframe></div></article>`;
   }
 
@@ -45,29 +45,8 @@
         video.style.setProperty('background','#000','important');
         video.style.setProperty('max-height','72vh','important');
       };
-
-      const forcePreview=()=>{
-        try{
-          if(video.duration && isFinite(video.duration)){
-            const t=Math.min(0.08,Math.max(0.01,video.duration/1000));
-            if(video.currentTime<0.01)video.currentTime=t;
-          }
-          video.pause();
-        }catch(e){}
-      };
-
-      if(video.readyState>=1){
-        apply();
-        forcePreview();
-      }else{
-        video.addEventListener('loadedmetadata',()=>{
-          apply();
-          forcePreview();
-        },{once:true});
-      }
-
-      video.addEventListener('loadeddata',forcePreview,{once:true});
-      video.addEventListener('canplay',forcePreview,{once:true});
+      if(video.readyState>=1)apply();
+      else video.addEventListener('loadedmetadata',apply,{once:true});
     });
   }
 
@@ -76,38 +55,26 @@
     boxes().forEach(box=>{box.innerHTML=html;box.dataset.vmTikTokManaged='1';fitLocalVideos(box)});
   }
 
-  async function refresh(){
-    const currentBoxes=boxes();
-    if(busy||!currentBoxes.length)return;
+  async function refresh(force=false){
+    if(busy||!boxes().length)return;
     busy=true;
     try{
       const r=await fetch(API+'?nocache='+Date.now(),{method:'GET',mode:'cors',cache:'no-store',headers:{'Accept':'application/json','Cache-Control':'no-cache'}});
       const d=await r.json();
       if(!r.ok||!d.ok||!Array.isArray(d.videos))throw Error('Flux TikTok indisponible');
       const sig=signature(d.videos);
-      const unmanaged=currentBoxes.some(x=>x.dataset.vmTikTokManaged!=='1');
-      const changed=sig!==lastSignature;
-      if(!lastSignature||changed||unmanaged){
-        lastSignature=sig;
-        render(d.videos);
-      }else{
-        fitLocalVideos(document);
-      }
+      if(force||sig!==lastSignature||boxes().some(x=>x.dataset.vmTikTokManaged!=='1')){lastSignature=sig;render(d.videos)}
     }catch(e){console.warn('VM RADIO TikTok Manager:',e)}finally{busy=false}
   }
 
   function start(){
-    refresh();
-    const observer=new MutationObserver(()=>{
-      if(boxes().some(x=>x.dataset.vmTikTokManaged!=='1'))refresh();
-    });
+    refresh(true);
+    const observer=new MutationObserver(()=>{if(boxes().some(x=>x.dataset.vmTikTokManaged!=='1'))refresh(true)});
     observer.observe(document.body,{childList:true,subtree:true});
-    document.addEventListener('visibilitychange',()=>{
-      if(!document.hidden){fitLocalVideos(document);refresh()}
-    });
-    window.addEventListener('focus',()=>{fitLocalVideos(document);refresh()});
+    document.addEventListener('visibilitychange',()=>{if(!document.hidden){fitLocalVideos(document);refresh(true)}});
+    window.addEventListener('focus',()=>{fitLocalVideos(document);refresh(true)});
     window.addEventListener('resize',()=>fitLocalVideos(document));
-    setInterval(()=>{if(!document.hidden)refresh()},POLL_MS);
+    setInterval(()=>{if(!document.hidden)refresh(false)},POLL_MS);
   }
 
   if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',start,{once:true});else start();
