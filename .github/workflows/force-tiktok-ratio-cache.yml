@@ -22,7 +22,7 @@ jobs:
           import re
           p=Path('tiktok.html')
           s=p.read_text(encoding='utf-8')
-          s2=re.sub(r'tiktok-admin-feed\.js(?:\?v=[^"\']*)?', 'tiktok-admin-feed.js?v=20260830-real-ratio3', s)
+          s2=re.sub(r'tiktok-admin-feed\.js(?:\?v=[^"\']*)?', 'tiktok-admin-feed.js?v=20260831-ios-preview-site1', s)
           if s2==s:
               raise SystemExit('Référence tiktok-admin-feed.js introuvable')
           p.write_text(s2,encoding='utf-8')
@@ -33,5 +33,5 @@ jobs:
           git config user.email "contact@vmradio.fr"
           git add tiktok.html
           git diff --cached --quiet && exit 0
-          git commit -m "Force le vrai ratio vidéo sur le site"
+          git commit -m "Force le preview iOS TikTok sur le site"
           git push
