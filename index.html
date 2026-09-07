@@ -1,23 +1,1226 @@
 <!doctype html>
 <html lang="fr">
 <head>
-<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="theme-color" content="#f5f2fb"><title>VM RADIO</title>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>VM RADIO</title>
 <style>
-:root{--bg:#f5f2fb;--card:#fff;--text:#171321;--muted:#857d91;--purple:#7d35ff;--purple2:#b53cff;--line:#e7e0f2;--dark:#160b23;--shadow:0 10px 28px rgba(83,52,123,.10)}*{box-sizing:border-box}html{scroll-behavior:smooth}body{margin:0;background:radial-gradient(circle at 8% 0%,rgba(126,53,255,.10),transparent 24%),linear-gradient(180deg,#f7f4fc 0%,#f4f1f8 62%,#f8f6fb 100%);color:var(--text);font-family:Inter,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",Arial,sans-serif}a{text-decoration:none;color:inherit}button,input{font:inherit}.site{width:min(1180px,calc(100% - 28px));margin:auto}.dedic-banner{width:min(1180px,calc(100% - 28px));margin:12px auto 10px;min-height:44px;padding:8px 14px;border-radius:14px;background:linear-gradient(90deg,#35105f,#5c19a8 54%,#35105f);color:#fff;display:flex;align-items:center;gap:12px;box-shadow:0 0 24px rgba(134,52,255,.25)}.dedic-banner strong{font-size:.78rem;letter-spacing:.05em}.dedic-banner span{font-size:.74rem;opacity:.92}.dedic-banner a{margin-left:auto;font-size:.75rem;font-weight:800;white-space:nowrap}.nav-wrap{position:sticky;top:0;z-index:50;padding-bottom:10px;background:linear-gradient(rgba(245,242,251,.94),rgba(245,242,251,.72),transparent);backdrop-filter:blur(12px)}.nav{position:relative;min-height:62px;padding:7px 12px;border-radius:16px;background:linear-gradient(90deg,#180c28,#13091f 55%,#1c0d2f);display:grid;grid-template-columns:180px 1fr auto;align-items:center;gap:14px;box-shadow:0 10px 24px rgba(33,13,50,.16)}.logo-img{width:164px;height:46px;object-fit:contain;object-position:left center;display:block}.nav-links{display:flex;align-items:center;justify-content:center;gap:6px;min-width:0}.nav-links a{color:#fff;font-size:.75rem;font-weight:700;padding:9px 10px;border-radius:999px;white-space:nowrap}.nav-links a.active{background:linear-gradient(135deg,#6e31ff,#9945ff);box-shadow:inset 0 0 0 1px rgba(255,255,255,.34),0 0 14px rgba(133,58,255,.22)}.listen-top{border:1px solid #c58cff;border-radius:999px;padding:9px 15px;background:linear-gradient(135deg,#6e31ff,#9a3eff);color:#fff;font-size:.75rem;font-weight:850;box-shadow:0 0 18px rgba(156,65,255,.50);cursor:pointer;display:inline-flex;align-items:center;gap:8px}.play-tri{width:0;height:0;border-top:6px solid transparent;border-bottom:6px solid transparent;border-left:10px solid currentColor}.hero{position:relative;height:340px;overflow:hidden;border-radius:20px;background:url('hero-vmradio.jpg') center 46%/cover no-repeat;box-shadow:var(--shadow)}.hero:before{content:"";position:absolute;inset:0;background:linear-gradient(90deg,rgba(17,6,28,.97) 0%,rgba(20,7,32,.95) 24%,rgba(25,8,39,.84) 37%,rgba(26,8,41,.58) 48%,rgba(23,7,36,.18) 60%,transparent 72%)}.hero-copy{position:relative;z-index:2;width:min(47%,530px);height:340px;padding:34px 24px 28px 38px;display:flex;flex-direction:column;justify-content:center;color:#fff}.hero-kicker{font-size:.69rem;font-weight:900;letter-spacing:.29em;color:#b06dff}.hero-title{margin:9px 0 6px;font-size:clamp(3rem,4.45vw,4.75rem);line-height:.9;font-weight:950;letter-spacing:-.055em;white-space:nowrap}.hero-title span{display:inline-block;padding-right:.08em;margin-right:-.08em;background:linear-gradient(180deg,#ff61ef 0%,#c13dff 45%,#8137ff 100%);-webkit-background-clip:text;background-clip:text;color:transparent}.hero-slogan{margin-top:7px;font-size:.76rem;font-weight:700;letter-spacing:.20em}.hero-text{max-width:350px;margin:17px 0 15px;font-size:.84rem;line-height:1.42}.hero-actions{display:flex;gap:10px;flex-wrap:nowrap}.hero-btn{min-height:40px;padding:0 15px;border-radius:999px;font-size:.72rem;font-weight:900;display:inline-flex;align-items:center;justify-content:center;gap:9px;border:1px solid transparent;cursor:pointer;white-space:nowrap}.hero-btn.primary{background:linear-gradient(135deg,#7335ff,#a748ff);color:#fff;border-color:#b988ff;box-shadow:0 0 20px rgba(145,55,255,.35)}.hero-btn.secondary{background:#fff;color:#251234;border-color:#eee6f6}.player-card{position:relative;overflow:hidden;margin-top:12px;background:#fff;border:1px solid var(--line);border-radius:18px;padding:16px 18px 18px;box-shadow:var(--shadow)}.player-card:before{content:"";position:absolute;width:230px;height:230px;border-radius:50%;background:#eee7ff;right:-70px;top:-150px}.section-kicker{position:relative;z-index:2;color:#7435ff;font-size:.78rem;font-weight:950;letter-spacing:.14em}.player-grid{position:relative;z-index:2;display:grid;grid-template-columns:155px 1fr;gap:20px;align-items:center;margin-top:10px}.album-cover{width:155px;height:155px;border-radius:19px;object-fit:cover;box-shadow:0 0 0 3px rgba(117,47,255,.48),0 0 22px rgba(153,40,255,.26)}.track-main h2{margin:0;font-size:1.48rem;letter-spacing:-.03em}.track-main .artist{font-size:.9rem;color:#8b8395;margin-top:5px}.live-chip{display:inline-flex;margin-top:8px;background:#f1eaff;color:#7131ff;padding:6px 9px;border-radius:999px;font-size:.68rem;font-weight:900}.progress{height:5px;background:#e9e2f4;border-radius:99px;margin-top:14px;overflow:hidden}.progress span{display:block;width:48%;height:100%;background:linear-gradient(90deg,#7130ff,#9a4dff)}.progress-meta{display:flex;justify-content:space-between;font-size:.66rem;color:#817991;margin-top:4px}.controls{display:flex;align-items:center;gap:12px;margin-top:12px}.control{appearance:none;border:0;cursor:pointer}.heart-btn{width:40px;height:40px;border-radius:50%;background:#fff;box-shadow:inset 0 0 0 1px #e2d9ef,0 7px 15px rgba(61,40,96,.08);font-size:20px}.play-main{width:54px;height:54px;border-radius:50%;display:grid;place-items:center;background:linear-gradient(135deg,#7c39f5,#9a4cff);color:#fff;box-shadow:0 12px 24px rgba(123,57,245,.22)}.volume{display:flex;align-items:center;gap:8px;margin-left:4px}.volume input{accent-color:#7d35ff;width:120px}.feature-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:9px;margin-top:10px}.feature-card{background:#fff;border:1px solid var(--line);border-radius:15px;padding:13px 11px;text-align:center;box-shadow:var(--shadow)}.feature-icon{width:36px;height:36px;margin:0 auto 7px;border-radius:11px;background:linear-gradient(145deg,#f5efff,#e9ddff);display:grid;place-items:center;color:#7b37f5;font-size:20px}.feature-card h3{margin:0;color:#7730f0;font-size:.72rem;letter-spacing:.1em}.feature-card p{margin:6px 0 9px;color:#81798b;font-size:.66rem;line-height:1.28;min-height:34px}.feature-action{display:flex;align-items:center;justify-content:center;gap:8px;width:100%;min-height:32px;border:1px solid #a95cff;border-radius:999px;background:#fff;color:#6f25e8;font-size:.64rem;font-weight:900;cursor:pointer}.lower-grid{display:grid;grid-template-columns:.86fr 1.14fr;gap:10px;margin-top:10px}.history{background:#fff;border:1px solid var(--line);border-radius:15px;padding:14px 16px;box-shadow:var(--shadow)}.history h3{margin:0 0 8px;color:#7931ff;font-size:.75rem;letter-spacing:.12em}.vm-programme-previous-item{display:grid;grid-template-columns:48px 1fr;gap:10px;align-items:center;padding:7px 0;border-top:1px solid #eee9f3}.vm-programme-previous-item:first-child{border-top:0}.vm-programme-previous-item img{width:48px;height:48px;border-radius:10px;object-fit:cover}.previous-info strong{display:block;font-size:.74rem}.previous-info small{display:block;color:#8b8395;font-size:.64rem}.previous-info em{display:block;color:#8c8496;font-size:.6rem;font-style:normal;margin-top:2px}.promo{position:relative;overflow:hidden;min-height:222px;border-radius:15px;background:#160920 url('assets/vmradio-download-banner.webp') center/cover no-repeat;box-shadow:var(--shadow)}.promo a{position:absolute;left:10.5%;top:50%;width:46%;height:19%;border-radius:999px}.newsletter{margin-top:10px;background:linear-gradient(90deg,#e8dcff,#d5bfff);border-radius:14px;min-height:70px;display:grid;grid-template-columns:1.1fr 1fr;gap:16px;align-items:center;padding:12px 18px}.news-left strong{display:block;color:#5d1fd1;font-size:.84rem}.news-left span{font-size:.66rem;color:#624b83}.news-form{display:grid;grid-template-columns:1fr 130px;gap:8px}.news-form input{border:0;border-radius:999px;padding:9px 13px;background:#fff;outline:none;font-size:.7rem}.news-form button{border:0;border-radius:999px;background:linear-gradient(135deg,#7130ff,#9d43ff);color:#fff;font-size:.7rem;font-weight:850;cursor:pointer}footer{margin-top:10px;background:linear-gradient(90deg,#160b22,#1a0c29 55%,#160b22);color:#fff}.footer-inner{width:min(1180px,calc(100% - 28px));margin:auto;min-height:112px;display:grid;grid-template-columns:170px 1fr 170px;gap:18px;align-items:center;padding:14px 0}.footer-logo{width:145px;height:auto;display:block}.footer-center{text-align:center;font-size:.64rem;color:#eee8f5}.footer-links{display:flex;justify-content:center;gap:15px;margin-bottom:8px;font-size:.7rem;flex-wrap:wrap}.footer-small{margin-top:6px;color:#c9c1d2}.socials{display:flex;justify-content:flex-end;gap:9px}.social{width:36px;height:36px;border-radius:50%;border:1px solid rgba(255,255,255,.38);display:grid;place-items:center;color:#fff;font-size:.72rem;font-weight:900}
-@media(max-width:980px){.nav{grid-template-columns:140px 1fr auto}.logo-img{width:132px}.nav-links{justify-content:flex-start;overflow-x:auto;scrollbar-width:none}.nav-links::-webkit-scrollbar{display:none}.hero{height:500px;background-position:62% center}.hero:before{background:linear-gradient(180deg,rgba(13,5,22,.08) 0%,rgba(13,5,22,.12) 38%,rgba(17,6,29,.80) 60%,rgba(17,6,29,.99) 78%,#15091f 100%)}.hero-copy{width:100%;height:500px;padding:265px 24px 28px;justify-content:flex-end}.feature-grid{grid-template-columns:repeat(2,1fr)}.lower-grid{grid-template-columns:1fr}.newsletter{grid-template-columns:1fr}.footer-inner{grid-template-columns:1fr;text-align:center}.footer-logo{margin:auto}.socials{justify-content:center}}
-@media(max-width:680px){.site,.dedic-banner,.footer-inner{width:calc(100% - 16px)}.dedic-banner span{display:none}.nav{display:flex;min-height:52px;padding:6px 8px;gap:7px}.logo-img{width:104px;height:36px;flex:0 0 104px}.nav-links{flex:1;gap:2px;overflow-x:auto}.nav-links a{font-size:.64rem;padding:7px 7px}.listen-top{display:none}.hero{height:470px;border-radius:16px;background-position:64% center}.hero-copy{height:470px;padding:245px 16px 22px}.hero-title{font-size:2.55rem}.hero-slogan{font-size:.69rem;letter-spacing:.14em}.hero-text{margin:12px 0;font-size:.79rem}.hero-actions{display:grid;grid-template-columns:1fr;gap:7px}.hero-btn{width:100%}.player-card{padding:13px 12px}.player-grid{grid-template-columns:82px 1fr;gap:12px;align-items:start}.album-cover{width:82px;height:82px;border-radius:14px}.track-main h2{font-size:1rem}.track-main .artist{font-size:.7rem}.controls{grid-column:1/-1}.feature-grid{grid-template-columns:1fr}.feature-card{display:grid;grid-template-columns:40px 1fr auto;grid-template-rows:auto auto;text-align:left;column-gap:10px;padding:10px 11px}.feature-icon{grid-row:1/3;margin:0}.feature-card h3{grid-column:2}.feature-card p{grid-column:2;margin:2px 0;min-height:0}.feature-action{grid-column:3;grid-row:1/3;width:36px;min-width:36px;height:34px;padding:0;font-size:0}.feature-action:after{content:'→';font-size:.8rem}.promo{min-height:190px}.newsletter{padding:13px}.news-form{grid-template-columns:1fr}.footer-inner{gap:10px}.footer-logo{width:115px}}
+*{box-sizing:border-box}body{margin:0;background:#fff;font-family:Arial,Helvetica,sans-serif;color:#160d20}
+:root{--p:#7827f5;--p2:#9c3aff;--lav:#f8f2ff;--line:#eadff5;--shadow:0 12px 32px rgba(80,40,120,.11)}
+.site{width:min(1450px,calc(100% - 48px));margin:auto}
+.ticker{height:45px;margin-top:10px;border:1px solid var(--line);border-radius:18px;background:linear-gradient(90deg,#fff,#f8f2ff);display:flex;align-items:center;overflow:hidden;box-shadow:var(--shadow)}
+.ticker b{height:30px;display:flex;align-items:center;padding:0 20px;border-right:1px solid var(--line);color:#7023dd;font-size:13px}.ticker div{flex:1;display:flex;justify-content:space-around;color:#746a7d;font-size:11px;font-weight:700}
+.head{height:88px;display:grid;grid-template-columns:270px 650px 1fr;gap:24px;align-items:center}
+.logo{font-size:33px;font-weight:950;letter-spacing:-2px;color:#6320c7}.logo span{color:#a33aff}.tag{font-family:cursive;font-size:13px;text-align:center;font-weight:400;letter-spacing:0}
+.nav{height:70px;padding:7px;border:1px solid var(--line);border-radius:26px;background:#fff;display:grid;grid-template-columns:repeat(5,1fr);box-shadow:var(--shadow)}
+.nav a{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:4px;border-radius:20px;font-size:11px;font-weight:800}.nav a:first-child{background:linear-gradient(135deg,#7024f1,#9432ff);color:#fff}.nav i{font-style:normal;font-size:18px}
+.actions{display:flex;gap:12px;justify-content:flex-end}.search{width:270px;height:56px;border:0;border-radius:29px;background:#f7f0fb;padding:0 22px}.listen{width:168px;height:56px;border:0;border-radius:29px;background:linear-gradient(135deg,#7024ef,#9632ff);color:#fff;font-weight:900}
+.hero{border-radius:22px;overflow:hidden;box-shadow:var(--shadow)}.hero img{display:block;width:100%}
+.playerrow{display:grid;grid-template-columns:1fr 325px;gap:18px;margin-top:16px}
+.player{height:94px;border-radius:25px;background:linear-gradient(110deg,#100a18,#1d1029);color:#fff;display:grid;grid-template-columns:80px minmax(180px,1fr) 62px 280px 130px 52px;gap:14px;align-items:center;padding:10px 14px}
+.cover{width:76px;height:76px;border-radius:16px;border:3px solid #8f32ff;object-fit:cover}.track b{font-size:19px}.track span{display:block;color:#c9bbd2;font-size:12px;margin-top:4px}
+.pause{width:58px;height:58px;border:0;border-radius:50%;background:linear-gradient(145deg,#b43eff,#7626ff);color:#fff;font-size:23px;box-shadow:0 0 22px #9e35ff88}
+.vol{display:flex;align-items:center;gap:9px}.vol input{width:190px;accent-color:#9c35ff}.live{border-left:1px solid #55475f;padding-left:18px;text-align:center}.live label{background:#7626ef;border-radius:11px;padding:3px 8px;font-size:9px;font-weight:900}.live strong{display:block;font-size:18px;margin-top:5px}.live small{font-size:9px;color:#b8acbf}.heart{width:45px;height:45px;border-radius:50%;border:1px solid #a244ff;background:#1a1022;color:#fff;font-size:20px}
+.next{height:94px;border:1px solid var(--line);border-radius:24px;background:#f9f4ff;display:grid;grid-template-columns:64px 1fr;gap:12px;align-items:center;padding:13px 18px}.next img{width:62px;height:62px;border-radius:10px;object-fit:cover}.next label{color:#7625df;font-size:11px;font-weight:900}.next b,.next span{display:block}.next b{font-size:13px}.next span,.next small{font-size:10px;color:#624f72}
+.cards{display:grid;grid-template-columns:repeat(4,1fr) 1.55fr;gap:13px;margin-top:15px}.card{height:143px;border:1px solid var(--line);border-radius:18px;background:#fff;padding:15px;box-shadow:0 7px 20px #6c3a8a0d}.ci{float:left;width:58px;height:58px;margin-right:13px;border-radius:14px;background:linear-gradient(145deg,#7625ef,#b43cff);color:#fff;display:grid;place-items:center;font-size:27px}.card h3{margin:7px 0;color:#5e1fac;font-size:13px}.card p{font-size:10px;line-height:1.4;height:35px}.card button{border:0;border-radius:17px;background:linear-gradient(135deg,#7425e9,#9633ff);color:#fff;padding:8px 16px;font-size:10px}
+.app{padding:0;overflow:hidden}.app img{width:100%;height:100%;object-fit:cover}
+.lower{display:grid;grid-template-columns:370px 1fr 470px;gap:13px;margin-top:13px}.box{height:130px;border:1px solid var(--line);border-radius:18px;background:#fff;padding:14px 22px}.box h3{margin:0 0 8px;color:#6520b7;font-size:12px}.song{display:grid;grid-template-columns:31px 1fr auto;gap:8px;align-items:center;margin:5px 0;font-size:10px}.song img{width:30px;height:30px;object-fit:cover;border-radius:3px}.song small{color:#766d7e}
+.news{background:linear-gradient(90deg,#fff,#f7efff)}.news p{font-size:11px;margin:0}.signup{display:flex;margin-top:18px}.signup input{height:36px;flex:1;border:1px solid var(--line);border-radius:19px 0 0 19px;padding:0 15px}.signup button{border:0;border-radius:0 19px 19px 0;background:#7627ee;color:#fff;padding:0 35px}
+.visual{padding:0;overflow:hidden}.visual img{width:100%;height:100%;object-fit:cover}
+.footer{height:74px;display:grid;grid-template-columns:240px 1fr 300px;align-items:center}.links{text-align:center;font-size:10px;color:#665b70}.links span{margin:0 8px}.copy{text-align:right;font-size:9px;color:#554c5e}
+@media(max-width:760px){.site{width:calc(100% - 20px)}.ticker{height:48px}.ticker b{padding:0 11px;font-size:10px}.ticker div{justify-content:flex-start;gap:20px;padding-left:12px;white-space:nowrap;overflow:hidden;font-size:9px}.head{height:68px;display:flex;justify-content:space-between}.logo{font-size:24px}.actions .search{display:none}.listen{width:115px;height:43px;font-size:11px}.nav{position:fixed;z-index:30;left:8px;right:8px;bottom:7px;height:66px;padding:5px;border-radius:20px}.nav a{font-size:8px}.hero{border-radius:18px}.playerrow{display:block}.player{height:auto;margin-top:10px;border-radius:20px;grid-template-columns:66px 1fr 42px;grid-template-areas:"c t h" "p v l";gap:10px;padding:12px}.cover{grid-area:c;width:64px;height:64px}.track{grid-area:t}.pause{grid-area:p;width:45px;height:45px}.vol{grid-area:v}.vol input{width:100%}.live{grid-area:l;border:0;padding:0}.heart{grid-area:h;width:40px;height:40px}.next{margin-top:10px;height:85px}.cards{grid-template-columns:1fr 1fr;gap:10px}.card{height:150px;padding:13px}.ci{float:none;width:48px;height:48px;margin:0 0 8px}.app{grid-column:1/-1;height:150px;padding:0}.lower{grid-template-columns:1fr;gap:10px}.box{height:auto;min-height:125px}.visual{height:125px;padding:0}.footer{height:auto;padding:20px 0 10px;grid-template-columns:1fr;text-align:center;gap:14px}.copy{text-align:center}body{padding-bottom:78px}}
 </style>
-</head>
-<body>
-<div class="dedic-banner"><strong>♡ DÉDICACES EN DIRECT</strong><span>Envoyez vos dédicaces sur VM RADIO !</span><a href="dedicaces.html">Créer une dédicace →</a></div>
-<div class="nav-wrap"><div class="site"><nav class="nav"><img class="logo-img" src="vmradio-app-logo-v2.png" alt="VM RADIO"><div class="nav-links"><a class="active" href="index.html">Accueil</a><a href="dedicaces.html">Dédicaces</a><a href="#" id="vmRequestNav">Demande de titres</a><a href="infos.html">Infos</a><a href="tiktok.html">TikTok</a></div><button class="listen-top" type="button" data-play-player><span class="play-tri"></span>Écouter</button></nav></div></div>
-<main class="site">
-<section class="hero"><div class="hero-copy"><div class="hero-kicker">BIENVENUE SUR</div><h1 class="hero-title">VM <span>RADIO</span></h1><div class="hero-slogan">FEEL THE SOUND, FEEL ALIVE</div><p class="hero-text">Votre webradio 100% musique, émotions<br>et bonnes vibes !</p><div class="hero-actions"><button class="hero-btn primary" type="button" data-play-player><span class="play-tri"></span>Écouter en direct</button><a class="hero-btn secondary" href="dedicaces.html">♡ Créer une dédicace</a></div></div></section>
-<section class="player-card"><div class="section-kicker">EN DIRECT MAINTENANT</div><div class="player-grid"><img class="album-cover" src="vm-radio-default-cover.jpeg" alt="" data-current-cover><div class="track-main"><h2 data-current-title>VM RADIO</h2><div class="artist" data-current-artist>Music IA By Valentin</div><div class="live-chip">● EN DIRECT</div><div class="progress"><span></span></div><div class="progress-meta"><span data-current-time>--:--</span><span>| LIVE</span></div><div class="controls"><button class="control heart-btn" type="button" aria-label="J’aime">♡</button><button class="control play-main" type="button" data-play-player aria-label="Écouter"><span class="play-tri"></span></button><div class="volume">🔊 <input id="volume" type="range" min="0" max="1" step="0.05" value="0.85" aria-label="Volume"></div></div></div></div></section>
-<section class="feature-grid"><article class="feature-card"><div class="feature-icon">♡</div><h3>DÉDICACES</h3><p>Faites passer un message<br>à l’antenne.</p><a class="feature-action" href="dedicaces.html">Faire une dédicace →</a></article><article class="feature-card"><div class="feature-icon">▣</div><h3>À SUIVRE</h3><p><strong data-next-title>Prochain titre</strong><br><span data-next-artist>VM RADIO</span></p><button class="feature-action" type="button">Voir la playlist →</button></article><article class="feature-card"><div class="feature-icon">▥</div><h3>TOP TITRES</h3><p>Les morceaux les plus aimés<br>par la communauté.</p><button class="feature-action" type="button">Voir le classement →</button></article><article class="feature-card"><div class="feature-icon">♪</div><h3>TIKTOK</h3><p>Suivez toute notre actu<br>et nos nouveautés.</p><a class="feature-action" href="tiktok.html">Voir nos vidéos →</a></article></section>
-<section class="lower-grid"><article class="history"><h3>3 DERNIERS TITRES</h3><div data-previous><p>Chargement des derniers titres…</p></div></article><article class="promo" aria-label="Télécharger l’application VM RADIO"><a href="https://app.vmradio.fr/telecharger.html" target="_blank" rel="noopener" aria-label="Télécharger notre application"></a></article></section>
-<section class="newsletter"><div class="news-left"><strong>Restez connecté avec VM RADIO !</strong><span>Recevez nos actus, nos nouveautés et bien plus encore.</span></div><form class="news-form" onsubmit="event.preventDefault()"><input type="email" placeholder="Votre adresse e-mail"><button type="submit">S’inscrire →</button></form></section>
-</main>
-<footer><div class="footer-inner"><img class="footer-logo" src="vmradio-app-logo-v2.png" alt="VM RADIO"><div class="footer-center"><div class="footer-links"><a href="index.html">Accueil</a><a href="dedicaces.html">Dédicaces</a><a href="infos.html">Infos</a><a href="tiktok.html">TikTok</a><a href="conditions.html">Conditions d’utilisation</a></div><div class="footer-small">© 2026 VM RADIO – Tous droits réservés – Propulsé par Music IA By Valentin</div></div><div class="socials"><a class="social" href="https://www.facebook.com/profile.php?viewas=100000686899395&amp;id=61593636923005" target="_blank" rel="noopener" aria-label="Facebook">f</a><a class="social" href="https://www.tiktok.com/@musiciabyvalentin" target="_blank" rel="noopener" aria-label="TikTok">♪</a></div></div></footer>
-<script src="vm-radio-flux-central.js?v=20260907-design1"></script>
-</body></html>
+
+
+
+
+
+
+<style id="vmradio-reference-layout">
+html,body{margin:0;width:100%;overflow-x:hidden;background:#fff}
+.site{width:min(1450px,calc(100% - 64px));margin:0 auto}
+
+/* Player : compact comme la maquette */
+.playerrow{
+  display:grid;
+  grid-template-columns:minmax(0,3.35fr) minmax(285px,1fr);
+  gap:18px;
+  margin-top:16px;
+}
+.player{
+  height:88px;
+  min-height:88px;
+  border-radius:26px;
+  padding:8px 14px;
+  grid-template-columns:72px minmax(190px,1fr) 58px minmax(180px,230px) 125px 46px;
+  gap:14px;
+}
+.cover{width:70px;height:70px;border-radius:15px}
+.track b{font-size:18px}.track span{font-size:12px}
+.pause{width:54px;height:54px}
+.heart{width:43px;height:43px}
+.next{height:88px;min-height:88px;border-radius:25px;padding:11px 15px}
+.next img{width:60px;height:60px}
+
+/* Les 5 cartes : petites et horizontales, comme sur la maquette */
+.cards{
+  display:grid;
+  grid-template-columns:repeat(4,minmax(0,1fr)) minmax(310px,1.55fr);
+  gap:13px;
+  margin-top:14px;
+}
+.card{
+  height:142px;
+  min-height:142px;
+  padding:14px 15px;
+  border-radius:18px;
+  overflow:hidden;
+}
+.card .ci{
+  float:left;
+  width:56px;height:56px;
+  margin:0 13px 8px 0;
+  border-radius:14px;
+}
+.card h3{
+  position:static;
+  transform:none;
+  max-width:none;
+  margin:6px 0 7px;
+  font-size:13px;
+  line-height:1.15;
+}
+.card p{
+  height:35px;
+  min-height:35px;
+  margin:0 0 8px;
+  font-size:10px;
+  line-height:1.35;
+}
+.card button{
+  padding:8px 15px;
+  border-radius:17px;
+  font-size:10px;
+  white-space:nowrap;
+}
+.app{padding:0}
+.app img{display:block;width:100%;height:100%;object-fit:cover}
+
+/* Ligne inférieure */
+.lower{
+  display:grid;
+  grid-template-columns:370px minmax(420px,1fr) 470px;
+  gap:13px;
+  margin-top:13px;
+}
+.box{
+  height:130px;
+  min-height:130px;
+  padding:14px 22px;
+  border-radius:18px;
+  overflow:hidden;
+}
+.song{margin:5px 0;grid-template-columns:31px 1fr auto}
+.song img{width:30px;height:30px}
+.signup{margin-top:18px}
+.signup button{min-width:0;padding:0 35px}
+.visual{padding:0}
+.visual img{display:block;width:100%;height:100%;object-fit:cover}
+
+/* Footer : séparé des blocs */
+.footer{
+  min-height:74px;
+  height:74px;
+  padding:0;
+  margin-top:8px;
+  grid-template-columns:240px minmax(0,1fr) 300px;
+}
+.footer .logo{font-size:25px}
+.footer .tag{font-size:13px}
+.links{line-height:normal}
+.copy{line-height:1.3}
+
+/* Pas d'effets qui agrandissent les cartes */
+.card:hover,.pause:hover,.heart:hover{transform:none}
+
+/* Tablette : on garde la composition sans écraser les cartes */
+@media(max-width:1200px) and (min-width:761px){
+  .site{width:calc(100% - 30px)}
+  .cards{grid-template-columns:repeat(2,1fr)}
+  .app{grid-column:1/-1;height:180px}
+  .lower{grid-template-columns:1fr 1fr}
+  .visual{grid-column:1/-1;height:180px}
+}
+
+/* Mobile */
+@media(max-width:760px){
+  .site{width:calc(100% - 20px)}
+  .playerrow{display:block}
+  .player{
+    height:auto;min-height:0;
+    grid-template-columns:66px minmax(0,1fr) 42px;
+    grid-template-areas:"c t h" "p v l";
+  }
+  .cover{grid-area:c;width:64px;height:64px}
+  .track{grid-area:t}.pause{grid-area:p}.volume,.vol{grid-area:v}.live{grid-area:l}.heart{grid-area:h}
+  .next{margin-top:10px;height:84px;min-height:84px}
+  .cards{grid-template-columns:1fr 1fr}
+  .card{height:150px;min-height:150px;padding:13px}
+  .card .ci{float:none;width:48px;height:48px;margin:0 0 8px}
+  .card h3{margin:0 0 5px}
+  .app{grid-column:1/-1;height:145px}
+  .lower{grid-template-columns:1fr}
+  .box{height:auto;min-height:125px}
+  .visual{height:125px}
+  .footer{height:auto;min-height:0;padding:18px 0;grid-template-columns:1fr;text-align:center;gap:12px}
+  .copy{text-align:center}
+}
+</style>
+
+
+
+
+
+<style id="vmradio-screen-fix">
+/* Correction ciblée d'après la dernière capture */
+.site{
+  width:min(1450px,calc(100% - 48px));
+  margin:0 auto;
+}
+
+/* Header */
+.head{
+  grid-template-columns:245px minmax(560px,650px) minmax(370px,1fr);
+  gap:18px;
+}
+.actions{display:flex;min-width:0}
+.search{width:auto;min-width:190px;flex:1}
+.listen{display:block;flex:0 0 150px}
+
+/* Player */
+.playerrow{
+  grid-template-columns:minmax(0,3.35fr) minmax(300px,1fr);
+  gap:18px;
+}
+
+/* 4 modules + application TOUJOURS sur la même ligne sur PC */
+.cards{
+  display:grid;
+  grid-template-columns:
+    minmax(190px,1fr)
+    minmax(210px,1fr)
+    minmax(190px,1fr)
+    minmax(190px,1fr)
+    minmax(330px,1.55fr);
+  gap:13px;
+}
+.card{
+  height:143px;
+  min-height:143px;
+  padding:15px;
+}
+.card .ci{
+  float:left;
+  width:58px;height:58px;
+  margin:0 13px 8px 0;
+}
+.card h3{font-size:13px;margin:7px 0}
+.card p{font-size:10px;line-height:1.4;height:35px;min-height:35px}
+.card button{font-size:10px;padding:8px 15px}
+.app{grid-column:auto;height:143px;padding:0}
+.app img{
+  display:block;
+  width:100%;
+  height:100%;
+  object-fit:cover;
+  object-position:center;
+}
+
+/* 3 blocs du bas TOUJOURS sur la même ligne sur PC */
+.lower{
+  display:grid;
+  grid-template-columns:370px minmax(420px,1fr) 470px;
+  gap:13px;
+}
+.box{
+  height:130px;
+  min-height:130px;
+  padding:14px 22px;
+}
+.visual{
+  grid-column:auto;
+  height:130px;
+  padding:0;
+}
+.visual img{
+  width:100%;
+  height:100%;
+  display:block;
+  object-fit:cover;
+  object-position:center;
+}
+
+/* Footer */
+.footer{
+  height:74px;
+  min-height:74px;
+  margin-top:0;
+  padding:0;
+}
+
+/* On ne casse la grille qu'au vrai format mobile */
+@media(max-width:760px){
+  .site{width:calc(100% - 20px)}
+  .head{height:68px;display:flex;justify-content:space-between}
+  .actions .search{display:none}
+  .listen{flex:0 0 115px;width:115px;height:43px}
+  .playerrow{display:block}
+  .cards{grid-template-columns:1fr 1fr}
+  .card{height:150px;min-height:150px;padding:13px}
+  .card .ci{float:none;width:48px;height:48px;margin:0 0 8px}
+  .app{grid-column:1/-1;height:145px}
+  .lower{grid-template-columns:1fr}
+  .box{height:auto;min-height:125px}
+  .visual{grid-column:auto;height:125px}
+  .footer{height:auto;min-height:0;padding:18px 0;grid-template-columns:1fr;text-align:center}
+  .copy{text-align:center}
+}
+</style>
+
+
+<style id="vmradio-cards-alignment">
+/* 4 cartes : contenu parfaitement cadré et aligné */
+.cards{
+  align-items:stretch;
+}
+.cards > .card:not(.app){
+  height:150px;
+  min-height:150px;
+  padding:18px 18px 14px;
+  display:grid;
+  grid-template-columns:64px minmax(0,1fr);
+  grid-template-rows:auto 1fr auto;
+  column-gap:14px;
+  row-gap:6px;
+  align-items:start;
+}
+.cards > .card:not(.app) .ci{
+  float:none;
+  grid-column:1;
+  grid-row:1 / span 2;
+  width:58px;
+  height:58px;
+  margin:0;
+  display:grid;
+  place-items:center;
+}
+.cards > .card:not(.app) h3{
+  grid-column:2;
+  grid-row:1;
+  margin:5px 0 0;
+  min-height:30px;
+  display:flex;
+  align-items:flex-start;
+  line-height:1.12;
+}
+.cards > .card:not(.app) p{
+  grid-column:2;
+  grid-row:2;
+  margin:0;
+  height:auto;
+  min-height:42px;
+  line-height:1.4;
+}
+.cards > .card:not(.app) button{
+  grid-column:1 / -1;
+  grid-row:3;
+  justify-self:start;
+  margin:0;
+  min-height:34px;
+  padding:8px 18px;
+}
+
+/* Carte application exactement à la même hauteur */
+.cards > .app{
+  height:150px;
+  min-height:150px;
+  border-radius:20px;
+}
+
+/* 3 derniers titres : contenu entièrement contenu dans le cadre */
+.lower > .box:first-child{
+  height:154px;
+  min-height:154px;
+  padding:16px 22px;
+  overflow:hidden;
+}
+.lower > .box:first-child h3{
+  margin:0 0 10px;
+  line-height:1;
+}
+.lower > .box:first-child .song{
+  height:34px;
+  margin:3px 0;
+  grid-template-columns:34px minmax(0,1fr) 42px;
+  gap:10px;
+  align-items:center;
+}
+.lower > .box:first-child .song img{
+  width:32px;
+  height:32px;
+  border-radius:5px;
+}
+.lower > .box:first-child .song b{
+  overflow:hidden;
+  white-space:nowrap;
+  text-overflow:ellipsis;
+}
+.lower > .box:first-child .song small{
+  text-align:right;
+}
+
+/* Les deux autres blocs du bas suivent la même hauteur */
+.lower > .box{
+  height:154px;
+  min-height:154px;
+}
+.lower > .visual{
+  height:154px;
+  min-height:154px;
+}
+
+/* Mobile */
+@media(max-width:760px){
+  .cards > .card:not(.app){
+    height:auto;
+    min-height:170px;
+    grid-template-columns:52px minmax(0,1fr);
+    padding:14px;
+    column-gap:10px;
+  }
+  .cards > .card:not(.app) .ci{width:48px;height:48px}
+  .cards > .app{height:145px;min-height:145px}
+  .lower > .box:first-child,
+  .lower > .box,
+  .lower > .visual{
+    height:auto;
+    min-height:150px;
+  }
+}
+</style>
+
+
+<style id="vmradio-hero-separated">
+.hero.hero-separated{
+  position:relative;
+  height:360px;
+  overflow:hidden;
+  border-radius:22px;
+  background:#10051d;
+  color:#fff;
+  box-shadow:0 12px 32px rgba(52,20,78,.18);
+}
+.hero-separated .hero-bg{
+  position:absolute;
+  inset:0;
+  width:100%;
+  height:100%;
+  object-fit:cover;
+  object-position:center;
+  filter:saturate(1.04) contrast(1.02);
+}
+.hero-separated:after{
+  content:"";
+  position:absolute;
+  inset:0;
+  background:linear-gradient(90deg,rgba(10,3,20,.36) 0%,rgba(10,3,20,.15) 48%,rgba(10,3,20,.02) 72%);
+  pointer-events:none;
+}
+.hero-overlay{
+  position:relative;
+  z-index:2;
+  width:58%;
+  height:100%;
+  padding:32px 0 22px 82px;
+  display:flex;
+  flex-direction:column;
+  justify-content:center;
+}
+.hero-kicker{
+  font-size:12px;
+  font-weight:700;
+  letter-spacing:.36em;
+  margin-bottom:11px;
+  color:#eee5f7;
+}
+.hero-brand{
+  font-size:72px;
+  line-height:.88;
+  font-weight:950;
+  letter-spacing:-5px;
+  text-shadow:0 4px 18px rgba(72,10,112,.35);
+}
+.hero-brand span{
+  background:linear-gradient(180deg,#f4dcff 0%,#b54aff 43%,#7721ec 100%);
+  -webkit-background-clip:text;
+  background-clip:text;
+  color:transparent;
+}
+.hero-slogan{
+  margin:7px 0 14px 75px;
+  font-family:cursive;
+  font-size:26px;
+  font-style:italic;
+  color:#eed6ff;
+  transform:rotate(-2deg);
+}
+.hero-genres{
+  font-size:10px;
+  font-weight:700;
+  letter-spacing:.15em;
+  color:#f0e9f4;
+  white-space:nowrap;
+  margin-bottom:15px;
+}
+.hero-genres i{
+  display:inline-block;
+  width:1px;height:11px;
+  background:rgba(255,255,255,.55);
+  margin:0 10px -2px;
+}
+.hero-buttons{display:flex;gap:12px;align-items:center}
+.hero-live,.hero-dedication{
+  height:54px;
+  border-radius:28px;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  gap:12px;
+  padding:0 22px;
+  text-decoration:none;
+  cursor:pointer;
+}
+.hero-live{
+  min-width:260px;
+  border:1px solid rgba(255,255,255,.45);
+  background:linear-gradient(135deg,#7222f2,#b83eff);
+  color:#fff;
+  box-shadow:0 0 24px rgba(150,48,255,.36),inset 0 1px rgba(255,255,255,.25);
+}
+.hero-dedication{
+  min-width:290px;
+  border:1px solid #eadcf4;
+  background:#fff;
+  color:#3f176b;
+  box-shadow:0 7px 18px rgba(30,8,49,.16);
+}
+.hero-play,.hero-heart{
+  width:38px;height:38px;
+  border-radius:50%;
+  display:grid;
+  place-items:center;
+  flex:0 0 38px;
+  font-size:20px;
+}
+.hero-play{background:#fff;color:#7523e9}
+.hero-heart{font-size:35px;line-height:1}
+.hero-buttons strong{display:block;font-size:13px;line-height:1.05}
+.hero-buttons small{display:block;font-size:8px;margin-top:3px;font-weight:700}
+.hero-benefits{
+  display:flex;
+  align-items:center;
+  margin-top:20px;
+  max-width:650px;
+}
+.hero-benefits>div{
+  min-width:190px;
+  display:flex;
+  align-items:center;
+  gap:10px;
+  padding:0 18px;
+  border-right:1px solid rgba(255,255,255,.32);
+}
+.hero-benefits>div:first-child{padding-left:0}
+.hero-benefits>div:last-child{border-right:0}
+.hero-benefits b{font-size:25px}
+.hero-benefits strong,.hero-benefits small{display:block}
+.hero-benefits strong{font-size:9px}
+.hero-benefits small{font-size:8px;margin-top:3px;color:#e1d8e6}
+
+@media(max-width:760px){
+  .hero.hero-separated{height:420px;border-radius:19px}
+  .hero-separated .hero-bg{object-position:62% center}
+  .hero-separated:after{background:linear-gradient(90deg,rgba(9,2,18,.82),rgba(9,2,18,.30) 72%,rgba(9,2,18,.05))}
+  .hero-overlay{width:100%;padding:28px 18px 20px;justify-content:flex-start}
+  .hero-kicker{font-size:8px;letter-spacing:.25em;margin-top:5px}
+  .hero-brand{font-size:48px;letter-spacing:-3px;margin-top:5px}
+  .hero-slogan{font-size:18px;margin:6px 0 12px 25px}
+  .hero-genres{font-size:7px;letter-spacing:.08em;white-space:normal;line-height:1.8;width:68%}
+  .hero-genres i{margin:0 5px}
+  .hero-buttons{flex-direction:column;align-items:flex-start;gap:8px;margin-top:4px}
+  .hero-live,.hero-dedication{height:48px;min-width:245px;padding:0 15px}
+  .hero-buttons strong{font-size:11px}
+  .hero-benefits{margin-top:auto;gap:8px;width:100%}
+  .hero-benefits>div{min-width:0;flex:1;padding:0 6px;gap:5px}
+  .hero-benefits b{font-size:17px}
+  .hero-benefits strong{font-size:7px}.hero-benefits small{font-size:6px}
+}
+</style>
+
+
+<style id="vmradio-hero-size-fix">
+.hero.hero-separated{
+  height:315px;
+}
+.hero-overlay{
+  padding-top:22px;
+  padding-bottom:16px;
+}
+.hero-brand{font-size:64px}
+.hero-slogan{font-size:23px;margin-top:5px;margin-bottom:10px}
+.hero-genres{margin-bottom:11px}
+.hero-live,.hero-dedication{height:48px}
+.hero-benefits{margin-top:13px}
+
+@media(max-width:760px){
+  .hero.hero-separated{height:350px}
+  .hero-overlay{padding:22px 16px 15px}
+  .hero-brand{font-size:43px}
+  .hero-slogan{font-size:17px}
+  .hero-live,.hero-dedication{height:44px}
+}
+</style>
+
+
+<style id="vmradio-hero-readability-fix">
+/* Voile sombre pour rendre tout le contenu du hero plus lisible */
+.hero-separated:after{
+  background:
+    linear-gradient(90deg,
+      rgba(8,2,17,.72) 0%,
+      rgba(12,3,25,.62) 35%,
+      rgba(12,3,25,.40) 58%,
+      rgba(10,2,20,.10) 82%
+    );
+}
+
+/* Logo : empêche le O de RADIO d'être écrasé */
+.hero-brand{
+  display:flex;
+  align-items:baseline;
+  gap:18px;
+  width:max-content;
+  font-size:64px;
+  line-height:1;
+  letter-spacing:-2px;
+  white-space:nowrap;
+}
+.hero-brand span{
+  display:inline-block;
+  line-height:1;
+  letter-spacing:-2px;
+  padding-right:8px;
+  transform:none;
+}
+
+/* Un peu plus de contraste sur les textes */
+.hero-kicker,
+.hero-slogan,
+.hero-genres,
+.hero-benefits{
+  text-shadow:0 2px 10px rgba(0,0,0,.65);
+}
+.hero-kicker{color:#fff}
+.hero-slogan{color:#f4e7ff}
+.hero-genres{color:#fff}
+
+/* léger fond derrière la zone texte sans créer de cadre visible */
+.hero-overlay:before{
+  content:"";
+  position:absolute;
+  z-index:-1;
+  left:40px;
+  top:14px;
+  bottom:14px;
+  width:92%;
+  border-radius:28px;
+  background:radial-gradient(ellipse at 35% 48%,
+    rgba(12,3,24,.28) 0%,
+    rgba(12,3,24,.14) 48%,
+    transparent 76%);
+  pointer-events:none;
+}
+
+@media(max-width:760px){
+  .hero-brand{
+    font-size:43px;
+    gap:11px;
+    letter-spacing:-1px;
+  }
+  .hero-brand span{
+    letter-spacing:-1px;
+    padding-right:5px;
+  }
+  .hero-separated:after{
+    background:linear-gradient(90deg,
+      rgba(8,2,17,.82) 0%,
+      rgba(10,3,22,.64) 58%,
+      rgba(10,2,20,.22) 100%);
+  }
+  .hero-overlay:before{left:4px;width:95%}
+}
+</style>
+
+
+
+
+
+
+
+
+<style id="vmradio-app-approved-visual">
+.vm-app-visual{
+  position:relative;
+  height:150px !important;
+  min-height:150px !important;
+  padding:0 !important;
+  overflow:hidden;
+  border:0 !important;
+  border-radius:20px !important;
+  background:#22064b;
+  box-shadow:0 10px 25px rgba(69,20,126,.18);
+}
+.vm-app-visual-bg{
+  display:block;
+  width:100%;
+  height:100%;
+  object-fit:cover;
+  object-position:center;
+  border-radius:inherit;
+}
+.vm-app-click{
+  position:absolute;
+  z-index:3;
+  /* zone du bouton Télécharger présent dans le visuel */
+  left:4%;
+  bottom:8%;
+  width:39%;
+  height:18%;
+  border-radius:999px;
+  cursor:pointer;
+}
+.vm-app-click:focus-visible{
+  outline:3px solid #fff;
+  outline-offset:2px;
+}
+@media(max-width:760px){
+  .vm-app-visual{
+    grid-column:1/-1 !important;
+    height:155px !important;
+    min-height:155px !important;
+  }
+}
+</style>
+
+
+<style id="vmradio-studio-banner">
+.visual{
+  padding:0 !important;
+  overflow:hidden !important;
+  border-radius:20px !important;
+  background:#160525;
+}
+.visual .vm-studio-banner{
+  display:block;
+  width:100%;
+  height:100%;
+  object-fit:cover;
+  object-position:center;
+  border-radius:inherit;
+  filter:saturate(1.03) contrast(1.02);
+}
+</style>
+
+
+<style id="vmradio-nav-polish">
+/* Barre de navigation centrale uniquement */
+.nav{
+  height:78px;
+  padding:7px 10px;
+  border:1px solid #eadff4;
+  border-radius:28px;
+  background:rgba(255,255,255,.96);
+  box-shadow:0 10px 28px rgba(77,31,117,.10);
+  display:grid;
+  grid-template-columns:repeat(5,1fr);
+  align-items:stretch;
+  gap:5px;
+}
+.nav a{
+  min-width:0;
+  height:64px;
+  padding:6px 9px;
+  border-radius:22px;
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  justify-content:center;
+  gap:5px;
+  color:#100516;
+  text-decoration:none;
+  font-size:11px;
+  line-height:1.05;
+  font-weight:800;
+  text-align:center;
+  transition:transform .16s ease,background .16s ease,color .16s ease,box-shadow .16s ease;
+}
+.nav a .ico,
+.nav a > span:first-child{
+  font-size:20px;
+  line-height:1;
+}
+.nav a:hover{
+  color:#7224e8;
+  background:#f7f0ff;
+  transform:translateY(-1px);
+}
+.nav a.active,
+.nav a[aria-current="page"]{
+  color:#fff;
+  background:linear-gradient(135deg,#7022ef 0%,#9d31ff 100%);
+  box-shadow:0 8px 20px rgba(125,38,238,.25);
+}
+.nav a.active .ico,
+.nav a[aria-current="page"] .ico,
+.nav a.active > span:first-child,
+.nav a[aria-current="page"] > span:first-child{
+  color:#fff;
+}
+
+/* Empêche "Demande de titres" de se casser de façon disgracieuse */
+.nav a:nth-child(3){
+  padding-left:5px;
+  padding-right:5px;
+}
+
+@media(max-width:760px){
+  .nav{
+    width:100%;
+    height:68px;
+    padding:5px;
+    border-radius:21px;
+    gap:2px;
+    overflow:hidden;
+  }
+  .nav a{
+    height:56px;
+    padding:4px 2px;
+    border-radius:17px;
+    gap:4px;
+    font-size:8px;
+  }
+  .nav a .ico,
+  .nav a > span:first-child{font-size:17px}
+}
+</style>
+
+
+<style id="vmradio-hero-responsive-sizing">
+/* HERO — proportions PC */
+@media(min-width:761px){
+  .hero-overlay{
+    width:61%;
+    padding-left:52px;
+    padding-right:16px;
+  }
+  .hero-kicker{
+    font-size:11px;
+    letter-spacing:.32em;
+    margin-bottom:8px;
+  }
+  .hero-brand{
+    font-size:58px;
+    gap:15px;
+  }
+  .hero-slogan{
+    font-size:21px;
+    margin:5px 0 10px 58px;
+  }
+  .hero-genres{
+    font-size:9px;
+    letter-spacing:.12em;
+    margin-bottom:12px;
+  }
+  .hero-genres i{margin:0 7px -2px}
+
+  .hero-buttons{
+    width:100%;
+    gap:12px;
+  }
+  .hero-live,
+  .hero-dedication{
+    height:47px;
+    min-width:0;
+    padding:0 16px;
+  }
+  .hero-live{width:45%}
+  .hero-dedication{width:51%}
+
+  .hero-play,
+  .hero-heart{
+    width:34px;
+    height:34px;
+    flex-basis:34px;
+  }
+  .hero-play{font-size:16px}
+  .hero-heart{font-size:29px}
+  .hero-buttons strong{
+    font-size:11px;
+    white-space:nowrap;
+  }
+  .hero-buttons small{
+    font-size:7px;
+    margin-top:2px;
+  }
+
+  .hero-benefits{
+    width:100%;
+    max-width:none;
+    margin-top:14px;
+  }
+  .hero-benefits>div{
+    min-width:0;
+    flex:1;
+    padding:0 12px;
+    gap:8px;
+  }
+  .hero-benefits b{font-size:21px}
+  .hero-benefits strong{font-size:8px;white-space:nowrap}
+  .hero-benefits small{font-size:7px;white-space:nowrap}
+}
+
+/* HERO — téléphone */
+@media(max-width:760px){
+  .hero.hero-separated{
+    height:355px;
+  }
+  .hero-overlay{
+    width:100%;
+    padding:20px 14px 14px;
+  }
+  .hero-kicker{
+    font-size:7px;
+    letter-spacing:.20em;
+    margin-bottom:6px;
+  }
+  .hero-brand{
+    font-size:39px;
+    gap:9px;
+    letter-spacing:-1px;
+  }
+  .hero-brand span{
+    letter-spacing:-1px;
+  }
+  .hero-slogan{
+    font-size:15px;
+    margin:4px 0 8px 18px;
+  }
+  .hero-genres{
+    width:76%;
+    font-size:6px;
+    letter-spacing:.06em;
+    line-height:1.65;
+    margin-bottom:8px;
+  }
+  .hero-genres i{height:8px;margin:0 3px -1px}
+
+  .hero-buttons{
+    width:72%;
+    gap:7px;
+  }
+  .hero-live,
+  .hero-dedication{
+    width:100%;
+    min-width:0;
+    height:42px;
+    padding:0 10px;
+    gap:8px;
+  }
+  .hero-play,
+  .hero-heart{
+    width:30px;
+    height:30px;
+    flex-basis:30px;
+  }
+  .hero-play{font-size:13px}
+  .hero-heart{font-size:25px}
+  .hero-buttons strong{
+    font-size:9px;
+    white-space:nowrap;
+  }
+  .hero-buttons small{
+    font-size:6px;
+    margin-top:2px;
+  }
+
+  .hero-benefits{
+    width:100%;
+    margin-top:auto;
+    gap:0;
+  }
+  .hero-benefits>div{
+    padding:0 6px;
+    gap:4px;
+  }
+  .hero-benefits b{font-size:15px}
+  .hero-benefits strong{
+    font-size:6px;
+    white-space:nowrap;
+  }
+  .hero-benefits small{
+    font-size:5px;
+    white-space:nowrap;
+  }
+}
+
+/* Très petits téléphones */
+@media(max-width:420px){
+  .hero.hero-separated{height:335px}
+  .hero-brand{font-size:34px}
+  .hero-slogan{font-size:14px}
+  .hero-buttons{width:78%}
+  .hero-buttons strong{font-size:8px}
+  .hero-benefits strong{font-size:5.5px}
+  .hero-benefits small{font-size:4.5px}
+}
+</style>
+
+
+<style id="vmradio-mobile-hero-buttons-fix">
+@media(max-width:760px){
+  /* Boutons du hero plus petits et moins hauts sur mobile */
+  .hero-buttons{
+    width:68%;
+    gap:6px;
+    margin-top:2px;
+  }
+  .hero-live,
+  .hero-dedication{
+    width:100%;
+    height:36px;
+    min-height:36px;
+    padding:0 9px;
+    gap:7px;
+    border-radius:20px;
+  }
+  .hero-play,
+  .hero-heart{
+    width:27px;
+    height:27px;
+    flex:0 0 27px;
+  }
+  .hero-play{font-size:11px}
+  .hero-heart{font-size:22px}
+  .hero-buttons strong{
+    font-size:8px;
+    line-height:1;
+  }
+  .hero-buttons small{
+    font-size:5.5px;
+    line-height:1;
+    margin-top:2px;
+  }
+}
+@media(max-width:420px){
+  .hero-buttons{width:72%}
+  .hero-live,.hero-dedication{
+    height:34px;
+    min-height:34px;
+  }
+}
+</style>
+
+
+<style id="vmradio-mobile-hero-final-model">
+/* Mobile : reproduction de la maquette validée */
+@media(max-width:760px){
+  .hero.hero-separated{
+    height:540px;
+    border-radius:24px;
+    overflow:hidden;
+  }
+  .hero-separated .hero-bg{
+    object-fit:cover;
+    object-position:63% center;
+  }
+  .hero-separated:after{
+    background:
+      linear-gradient(90deg,
+        rgba(8,2,18,.88) 0%,
+        rgba(9,2,20,.74) 43%,
+        rgba(10,2,22,.28) 72%,
+        rgba(8,2,18,.10) 100%);
+  }
+  .hero-overlay{
+    width:100%;
+    height:100%;
+    box-sizing:border-box;
+    padding:30px 22px 20px;
+    justify-content:flex-start;
+  }
+  .hero-overlay:before{
+    left:0;
+    top:0;
+    bottom:0;
+    width:78%;
+    border-radius:0;
+    background:linear-gradient(90deg,rgba(7,1,16,.30),transparent);
+  }
+
+  .hero-kicker{
+    margin:0 0 13px;
+    font-size:9px;
+    line-height:1;
+    letter-spacing:.25em;
+    white-space:nowrap;
+  }
+  .hero-brand{
+    margin:0;
+    font-size:48px;
+    line-height:.95;
+    gap:11px;
+    letter-spacing:-1px;
+  }
+  .hero-brand span{letter-spacing:-1px}
+  .hero-slogan{
+    margin:12px 0 16px 8px;
+    font-size:20px;
+    line-height:1;
+  }
+  .hero-genres{
+    width:72%;
+    margin:0 0 17px;
+    font-size:7px;
+    line-height:1.65;
+    letter-spacing:.07em;
+  }
+
+  .hero-buttons{
+    width:69%;
+    margin:0;
+    gap:9px;
+    flex-direction:column;
+    align-items:stretch;
+  }
+  .hero-live,
+  .hero-dedication{
+    width:100%;
+    min-width:0;
+    height:48px;
+    min-height:48px;
+    border-radius:25px;
+    padding:0 13px;
+    gap:10px;
+  }
+  .hero-play,.hero-heart{
+    width:34px;
+    height:34px;
+    flex:0 0 34px;
+  }
+  .hero-play{font-size:14px}
+  .hero-heart{font-size:28px}
+  .hero-buttons strong{
+    font-size:9.5px;
+    line-height:1.05;
+  }
+  .hero-buttons small{
+    font-size:6px;
+    margin-top:3px;
+  }
+
+  .hero-benefits{
+    width:100%;
+    margin-top:auto;
+    padding-top:12px;
+    display:grid;
+    grid-template-columns:repeat(3,1fr);
+    gap:0;
+  }
+  .hero-benefits>div{
+    min-width:0;
+    padding:0 8px;
+    gap:5px;
+    justify-content:center;
+    border-right:1px solid rgba(255,255,255,.42);
+  }
+  .hero-benefits>div:first-child{padding-left:0}
+  .hero-benefits>div:last-child{padding-right:0;border-right:0}
+  .hero-benefits b{font-size:18px}
+  .hero-benefits strong{
+    font-size:6.3px;
+    line-height:1.15;
+    white-space:nowrap;
+  }
+  .hero-benefits small{
+    font-size:5.3px;
+    line-height:1.2;
+    white-space:nowrap;
+  }
+}
+
+@media(max-width:420px){
+  .hero.hero-separated{height:500px}
+  .hero-overlay{padding:25px 17px 17px}
+  .hero-brand{font-size:42px}
+  .hero-slogan{font-size:18px;margin-bottom:13px}
+  .hero-genres{width:76%;font-size:6.2px;margin-bottom:13px}
+  .hero-buttons{width:72%;gap:7px}
+  .hero-live,.hero-dedication{height:43px;min-height:43px}
+  .hero-play,.hero-heart{width:30px;height:30px;flex-basis:30px}
+  .hero-buttons strong{font-size:8.5px}
+  .hero-benefits b{font-size:16px}
+  .hero-benefits strong{font-size:5.5px}
+  .hero-benefits small{font-size:4.7px}
+}
+</style>
+
+</head><body><div class="site">
+<div class="ticker"><b>♡ DÉDICACES</b><div><span>♡ Laura pour Valentin : J’aime trop ce que tu as fais ❤️</span><span>•</span><span>♡ Ysoline pour Valentin : Incroyable ta plateforme 😍</span><span>•</span><span>♡ Une communauté toujours plus grande !</span></div></div>
+<header class="head"><div class="logo">VM <span>RADIO</span><div class="tag">Feel the sound, Feel alive</div></div><nav class="nav"><a><i>⌂</i>Accueil</a><a><i>♡</i>Dédicaces</a><a><i>♫</i>Demande de titres</a><a><i>ⓘ</i>Infos</a><a><i>♪</i>TikTok</a></nav><div class="actions"><input class="search" placeholder="⌕  Rechercher un titre ou un artiste..."><button class="listen">▶ &nbsp; Écouter</button></div></header>
+<section class="hero hero-separated">
+  <img class="hero-bg" src="assets/images/hero-mobile-bg.png" alt="">
+  <div class="hero-overlay">
+    <div class="hero-kicker">VOTRE RADIO, VOTRE UNIVERS</div>
+    <div class="hero-brand">VM <span>RADIO</span></div>
+    <div class="hero-slogan">Feel the sound, Feel alive</div>
+    <div class="hero-genres">HITS <i></i> POP <i></i> RAP <i></i> ELECTRO <i></i> R&amp;B <i></i> VARIÉTÉ <i></i> ET BIEN PLUS...</div>
+    <div class="hero-buttons">
+      <button class="hero-live" type="button" data-play-player>
+        <span class="hero-play">▶</span>
+        <span><strong>ÉCOUTER EN DIRECT</strong><small>VM RADIO</small></span>
+      </button>
+      <a class="hero-dedication" href="dedicaces.html">
+        <span class="hero-heart">♡</span>
+        <span><strong>CRÉER UNE DÉDICACE</strong><small>FAITES PASSER VOTRE MESSAGE</small></span>
+      </a>
+    </div>
+    <div class="hero-benefits">
+      <div><b>🎧</b><span><strong>UNE SEULE RADIO</strong><small>DES MILLIERS D’ÉMOTIONS</small></span></div>
+      <div><b>♟</b><span><strong>UNE COMMUNAUTÉ</strong><small>À VOTRE ÉCOUTE</small></span></div>
+      <div><b>♫</b><span><strong>DES TITRES</strong><small>POUR TOUS LES GOÛTS</small></span></div>
+    </div>
+  </div>
+</section>
+<section class="playerrow"><div class="player"><img class="cover" src="assets/images/current-cover.jpg"><div class="track"><b>Wasted Love</b><span>Music IA By Valentin</span></div><button class="pause">Ⅱ</button><div class="vol">🔊 <input type="range" value="85"><b>85%</b></div><div class="live"><label>● EN DIRECT</label><strong>19:22</strong><small>Lun 7 sept 2026</small></div><button class="heart">♥</button></div><div class="next"><img src="assets/images/next-cover.jpg"><div><label>À SUIVRE</label><b>Another Day</b><span>Music IA By Valentin</span><small>19:26</small></div></div></section>
+<section class="cards"><div class="card"><div class="ci">♡</div><h3>DÉDICACES</h3><p>Faites passer un message à l’antenne.</p><button>Faire une dédicace →</button></div><div class="card"><div class="ci">♫</div><h3>DEMANDE DE TITRES</h3><p>Choisissez un morceau de la playlist VM RADIO.</p><button>Demander un titre →</button></div><div class="card"><div class="ci">▥</div><h3>TOP TITRES</h3><p>Les morceaux les plus aimés par la communauté.</p><button>Voir le classement →</button></div><div class="card"><div class="ci">♪</div><h3>TIKTOK</h3><p>Suivez toute notre actu et nos nouveautés.</p><button>Voir nos vidéos →</button></div>
+
+<article class="card app vm-app-visual">
+  <img class="vm-app-visual-bg" src="assets/images/app-download-banner.png" alt="Téléchargez l'application VM RADIO">
+  <a class="vm-app-click" href="https://app.vmradio.fr/telecharger.html" aria-label="Télécharger l'application VM RADIO"></a>
+</article>
+
+</section>
+<section class="lower"><div class="box"><h3>3 DERNIERS TITRES</h3><div class="song"><img src="assets/images/recent-wasted-love.jpg"><b>Wasted Love</b><small>19:22</small></div><div class="song"><img src="assets/images/recent-better-days.jpg"><b>Better Days</b><small>19:18</small></div><div class="song"><img src="assets/images/recent-who-i-am.jpg"><b>Who I am ...</b><small>19:14</small></div></div><div class="box news"><h3>▥ &nbsp; RESTEZ CONNECTÉ AVEC VM RADIO !</h3><p>Recevez nos actus, nos nouveautés et bien plus encore.</p><div class="signup"><input placeholder="Votre adresse e-mail"><button>S'inscrire →</button></div></div><div class="box visual">
+  <img class="vm-studio-banner" src="assets/images/studio-banner.png" alt="VM RADIO - Music IA By Valentin">
+</div></section>
+<footer class="footer"><div class="logo">VM <span>RADIO</span><div class="tag">Feel the sound, Feel alive</div></div><div class="links"><span>Accueil</span><span>|</span><span>Dédicaces</span><span>|</span><span>Infos</span><span>|</span><span>TikTok</span><span>|</span><span>Conditions d’utilisation</span><span>|</span><span>Politique de confidentialité</span></div><div class="copy">© 2026 VM RADIO – Tous droits réservés<br>Propulsé par Music IA By Valentin</div></footer>
+</div></body></html>
